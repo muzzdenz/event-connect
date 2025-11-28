@@ -12,7 +12,7 @@
                     <!-- Total Users -->
                     <div class="bg-white rounded-lg shadow p-6">
                         <div class="flex items-center">
-                            <div class="p-3 rounded-full bg-blue-100 text-blue-600">
+                            <div class="p-3 rounded-full" style="background-color: rgba(178, 34, 52, 0.1); color: var(--color-primary);">
                                 <i class="fas fa-users text-2xl"></i>
                             </div>
                             <div class="ml-4">
@@ -136,8 +136,8 @@
                 datasets: [{
                     label: 'Events Created',
                     data: @json($monthlyEvents['events']),
-                    borderColor: 'rgb(59, 130, 246)',
-                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    borderColor: 'rgb(178, 34, 52)',
+                    backgroundColor: 'rgba(178, 34, 52, 0.1)',
                     tension: 0.4,
                     fill: true
                 }]

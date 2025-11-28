@@ -10,21 +10,28 @@
 <body class="bg-gray-100">
     <!-- Sidebar -->
     <div class="flex h-screen">
-        <div class="w-64 bg-white shadow-lg">
+        <div class="w-64 shadow-lg" style="background-color: #B22234;">
             <div class="p-6">
-                <h1 class="text-2xl font-bold text-gray-800">Event Connect</h1>
-                <p class="text-gray-600 text-sm">Admin Dashboard</p>
+                <div class="flex items-center gap-3">
+                    <div class="h-10 w-10 rounded-full bg-white/20 flex items-center justify-center">
+                        <i class="fas fa-calendar-alt text-white"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-white">Event Connect</h1>
+                        <p class="text-white/80 text-xs">Admin Dashboard</p>
+                    </div>
+                </div>
             </div>
             <nav class="mt-6">
-                <a href="/admin/dashboard" class="flex items-center px-6 py-3 text-gray-600 hover:bg-gray-50">
+                <a href="/admin/dashboard" class="flex items-center px-6 py-3 text-white/80 hover:bg-white/10">
                     <i class="fas fa-tachometer-alt mr-3"></i>
                     Dashboard
                 </a>
-                <a href="/admin/events" class="flex items-center px-6 py-3 text-gray-700 bg-blue-50 border-r-4 border-blue-500">
+                <a href="/admin/events" class="flex items-center px-6 py-3 text-white bg-white/20 border-r-4 border-white">
                     <i class="fas fa-calendar-alt mr-3"></i>
                     Events
                 </a>
-                <a href="/admin/categories" class="flex items-center px-6 py-3 text-gray-600 hover:bg-gray-50">
+                <a href="/admin/categories" class="flex items-center px-6 py-3 text-white/80 hover:bg-white/10">
                     <i class="fas fa-tags mr-3"></i>
                     Categories
                 </a>
@@ -58,7 +65,7 @@
                     @if($event->qr_code)
                         <div class="flex flex-col md:flex-row gap-8 items-center justify-center">
                             <!-- QR Code Display -->
-                            <div class="bg-white p-6 rounded-lg shadow-lg border-4 border-blue-500">
+                            <div class="bg-white p-6 rounded-lg shadow-lg border-4" style="border-color: #B22234;">
                                 <img src="{{ asset('storage/' . $event->qr_code) }}" 
                                      alt="QR Code for {{ $event->title }}" 
                                      class="w-64 h-64 mx-auto">
@@ -67,11 +74,11 @@
 
                             <!-- QR Code Info -->
                             <div class="space-y-4">
-                                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                                    <h4 class="font-semibold text-blue-900 mb-2">
+                                <div class="rounded-lg p-4" style="background-color: rgba(178, 34, 52, 0.1); border: 1px solid rgba(178, 34, 52, 0.2);">
+                                    <h4 class="font-semibold mb-2" style="color: #8F1C2A;">
                                         <i class="fas fa-info-circle mr-2"></i>Instructions
                                     </h4>
-                                    <ul class="list-disc list-inside text-blue-800 text-sm space-y-1">
+                                    <ul class="list-disc list-inside text-sm space-y-1" style="color: #B22234;">
                                         <li>Display this QR code to participants at the event</li>
                                         <li>Participants will scan using their mobile devices</li>
                                         <li>Attendance will be automatically marked upon successful scan</li>
@@ -91,7 +98,7 @@
 
                                 <div class="flex gap-3">
                                     <a href="{{ route('attendance.participants', $event->id) }}" 
-                                       class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg text-center transition duration-200">
+                                       style="background-color: #B22234;" class="flex-1 hover:opacity-90 text-white font-bold py-2 px-4 rounded-lg text-center transition duration-200">
                                         <i class="fas fa-list mr-2"></i>View Participants
                                     </a>
                                     <button onclick="downloadQR()" 
@@ -125,7 +132,7 @@
                             <h3 class="text-xl font-semibold text-gray-700 mb-2">QR Code Not Generated</h3>
                             <p class="text-gray-600 mb-4">QR code will be generated automatically when you publish the event.</p>
                             <a href="{{ route('admin.events.edit', $event->id) }}" 
-                               class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition duration-200">
+                               style="background-color: #B22234;" class="inline-block hover:opacity-90 text-white font-bold py-2 px-6 rounded-lg transition duration-200">
                                 Edit Event
                             </a>
                         </div>

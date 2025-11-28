@@ -11,7 +11,7 @@
         <div class="flex justify-between items-center">
             <h3 class="text-lg font-medium text-gray-900">{{ $event->title }}</h3>
             <div class="flex space-x-2">
-                <a href="{{ route('admin.events.edit', $event) }}" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+                <a href="{{ route('admin.events.edit', $event) }}" style="background-color: var(--color-primary);" class="text-white px-4 py-2 rounded-md hover:opacity-90">
                     <i class="fas fa-edit mr-2"></i>Edit Event
                 </a>
                 <a href="{{ route('admin.events.index') }}" class="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700">
@@ -41,7 +41,7 @@
                     
                     <div>
                         <label class="block text-sm font-medium text-gray-700">Category</label>
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
                             {{ $event->category->name ?? 'Uncategorized' }}
                         </span>
                     </div>

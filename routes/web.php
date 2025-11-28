@@ -14,23 +14,18 @@ use App\Http\Controllers\ParticipantEventController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\AttendanceController;
 
+// Home page - redirect to home route
 Route::get('/', function () {
-    if (Auth::check()) {
-        // If user is logged in, redirect to appropriate dashboard
-        if (Auth::user()->isSuperAdmin() || Auth::user()->isAdmin()) {
-            return redirect()->route('admin.dashboard');
-        } else {
-            return redirect()->route('participant.dashboard');
-        }
-    }
-    
-    // If not logged in, show welcome page
-    return view('welcome');
+    return redirect()->route('home');
 });
 
 Route::get('/api-docs', function () {
     return view('api-docs');
 });
+
+Route::get('/guide', function () {
+    return view('guide');
+})->name('guide');
 
 // Authentication Routes
 Route::middleware('guest')->group(function () {
@@ -38,6 +33,7 @@ Route::middleware('guest')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
     Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/auth/create-session', [AuthController::class, 'createSessionFromToken'])->name('auth.create-session');
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -45,11 +41,14 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // Participant Dashboard
 Route::middleware(['auth', 'role:participant'])->group(function () {
     Route::get('/participant/dashboard', [ParticipantDashboardController::class, 'index'])->name('participant.dashboard');
+    Route::get('/participant/profile', [ParticipantDashboardController::class, 'profile'])->name('participant.profile');
+    Route::put('/participant/profile', [ParticipantDashboardController::class, 'updateProfile'])->name('participant.profile.update');
     Route::get('/attendance/scanner', [AttendanceController::class, 'scanner'])->name('attendance.scanner');
     Route::post('/attendance/mark', [AttendanceController::class, 'markAttendance'])->name('attendance.mark');
 });
 
 // Public Event Search & Browse (Available to all users)
+Route::get('/', [ParticipantEventController::class, 'home'])->name('home');
 Route::get('/events', [ParticipantEventController::class, 'index'])->name('events.index');
 Route::get('/events/{event}', [ParticipantEventController::class, 'show'])->name('events.show');
 

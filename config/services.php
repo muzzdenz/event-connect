@@ -43,4 +43,13 @@ return [
         'redirect_url' => env('XENDIT_REDIRECT_URL'),
     ],
 
+    'backend' => [
+        'base_url' => env('API_BASE_URL', 'http://localhost:8000/api'),
+        'asset_base_url' => env(
+            'API_ASSET_BASE_URL',
+            preg_replace('/\/api$/', '', rtrim(env('API_BASE_URL', 'http://localhost:8000/api'), '/'))
+        ),
+        'timeout' => env('API_TIMEOUT', 10),
+    ],
+
 ];

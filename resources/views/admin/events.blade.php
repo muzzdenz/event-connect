@@ -10,39 +10,46 @@
 <body class="bg-gray-100">
     <!-- Sidebar -->
     <div class="flex h-screen">
-        <div class="w-64 bg-white shadow-lg">
+        <div class="w-64 shadow-lg" style="background-color: #B22234;">
             <div class="p-6">
-                <h1 class="text-2xl font-bold text-gray-800">Event Connect</h1>
-                <p class="text-gray-600 text-sm">Admin Dashboard</p>
+                <div class="flex items-center gap-3">
+                    <div class="h-10 w-10 rounded-full bg-white/20 flex items-center justify-center">
+                        <i class="fas fa-calendar-alt text-white"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-white">Event Connect</h1>
+                        <p class="text-white/80 text-xs">Admin Dashboard</p>
+                    </div>
+                </div>
             </div>
             <nav class="mt-6">
-                <a href="/admin/dashboard" class="flex items-center px-6 py-3 text-gray-600 hover:bg-gray-50">
+                <a href="/admin/dashboard" class="flex items-center px-6 py-3 text-white/80 hover:bg-white/10">
                     <i class="fas fa-tachometer-alt mr-3"></i>
                     Dashboard
                 </a>
-                <a href="/admin/users" class="flex items-center px-6 py-3 text-gray-600 hover:bg-gray-50">
+                <a href="/admin/users" class="flex items-center px-6 py-3 text-white/80 hover:bg-white/10">
                     <i class="fas fa-users mr-3"></i>
                     Users
                 </a>
-                <a href="/admin/events" class="flex items-center px-6 py-3 text-gray-700 bg-blue-50 border-r-4 border-blue-500">
+                <a href="/admin/events" class="flex items-center px-6 py-3 text-white bg-white/20 border-r-4 border-white">
                     <i class="fas fa-calendar-alt mr-3"></i>
                     Events
                 </a>
-                <a href="/admin/finance" class="flex items-center px-6 py-3 text-gray-600 hover:bg-gray-50">
+                <a href="/admin/finance" class="flex items-center px-6 py-3 text-white/80 hover:bg-white/10">
                     <i class="fas fa-coins mr-3"></i>
                     Finance
                 </a>
-                <a href="/admin/categories" class="flex items-center px-6 py-3 text-gray-600 hover:bg-gray-50">
+                <a href="/admin/categories" class="flex items-center px-6 py-3 text-white/80 hover:bg-white/10">
                     <i class="fas fa-tags mr-3"></i>
                     Categories
                 </a>
-                <a href="/admin/analytics" class="flex items-center px-6 py-3 text-gray-600 hover:bg-gray-50">
+                <a href="/admin/analytics" class="flex items-center px-6 py-3 text-white/80 hover:bg-white/10">
                     <i class="fas fa-chart-line mr-3"></i>
                     Analytics
                 </a>
                 <form action="{{ route('logout') }}" method="POST" class="mt-6 px-6">
                     @csrf
-                    <button type="submit" class="w-full flex items-center justify-start px-0 py-3 text-left text-red-600 hover:bg-red-50 rounded">
+                    <button type="submit" class="w-full flex items-center justify-start px-0 py-3 text-left text-white/80 hover:bg-white/10 rounded">
                         <i class="fas fa-sign-out-alt mr-3"></i>
                         Logout
                     </button>
@@ -59,7 +66,7 @@
                         <h2 class="text-3xl font-bold text-gray-800">Events Management</h2>
                         <p class="text-gray-600">Manage all events and their details.</p>
                     </div>
-                    <a href="{{ route('admin.events.create') }}" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center text-lg">
+                    <a href="{{ route('admin.events.create') }}" style="background-color: #B22234;" class="text-white px-6 py-3 rounded-lg hover:opacity-90 font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center text-lg">
                         <i class="fas fa-plus mr-2"></i>Create New Event
                     </a>
                 </div>
@@ -71,17 +78,17 @@
                 <div class="bg-white rounded-lg shadow p-6 mb-6">
                     <div class="flex flex-col md:flex-row gap-4">
                         <div class="flex-1">
-                            <input type="text" placeholder="Search events..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <input type="text" placeholder="Search events..." class="admin-input w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-transparent">
                         </div>
                         <div class="flex gap-2">
-                            <select class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                            <select class="admin-input px-4 py-2 border border-gray-300 rounded-lg">
                                 <option>All Events</option>
                                 <option>Active Events</option>
                                 <option>Completed Events</option>
                                 <option>Paid Events</option>
                                 <option>Free Events</option>
                             </select>
-                            <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                            <button style="background-color: #B22234;" class="px-4 py-2 text-white rounded-lg hover:opacity-90">
                                 <i class="fas fa-search mr-2"></i>Search
                             </button>
                         </div>
@@ -140,7 +147,7 @@
                                         <div class="text-sm text-gray-900">{{ $event->registered_count }}/{{ $event->quota ?? '∞' }}</div>
                                         @if($event->quota)
                                             <div class="w-full bg-gray-200 rounded-full h-2 mt-1">
-                                                <div class="bg-blue-600 h-2 rounded-full" style="width: {{ min(100, ($event->registered_count / $event->quota) * 100) }}%"></div>
+                                                <div class="h-2 rounded-full" style="background-color: #B22234; width: {{ min(100, ($event->registered_count / $event->quota) * 100) }}%"></div>
                                             </div>
                                         @endif
                                     </td>
@@ -181,7 +188,7 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <div class="flex space-x-2">
-                                            <a href="{{ route('admin.events.show', $event) }}" class="text-blue-600 hover:text-blue-900" title="View Details">
+                                            <a href="{{ route('admin.events.show', $event) }}" style="color: #B22234;" class="hover:opacity-80" title="View Details">
                                                 <i class="fas fa-eye"></i>
                                             </a>
                                             <a href="{{ route('admin.events.edit', $event) }}" class="text-green-600 hover:text-green-900" title="Edit Event">

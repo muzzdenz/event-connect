@@ -11,7 +11,7 @@
         <h2 class="text-2xl font-bold text-gray-900">My Events</h2>
         <p class="text-gray-600">Manage your created events</p>
     </div>
-    <a href="{{ route('admin.events.create') }}" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center text-lg">
+    <a href="{{ route('admin.events.create') }}" style="background-color: var(--color-primary);" class="text-white px-6 py-3 rounded-lg hover:opacity-90 font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center text-lg">
         <i class="fas fa-plus mr-2"></i>Create New Event
     </a>
 </div>
@@ -21,7 +21,7 @@
     <div class="px-6 py-4 border-b border-gray-200">
         <div class="flex justify-between items-center">
             <h3 class="text-lg font-medium text-gray-900">My Events</h3>
-            <a href="{{ route('admin.events.create') }}" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 font-medium shadow-md hover:shadow-lg transition-all duration-200 flex items-center">
+            <a href="{{ route('admin.events.create') }}" style="background-color: var(--color-primary);" class="text-white px-6 py-3 rounded-lg hover:opacity-90 font-medium shadow-md hover:shadow-lg transition-all duration-200 flex items-center">
                 <i class="fas fa-plus mr-2"></i>Create New Event
             </a>
         </div>
@@ -31,16 +31,16 @@
     <div class="px-6 py-4 border-b border-gray-200">
         <div class="flex flex-col sm:flex-row gap-4">
             <div class="flex-1">
-                <input type="text" placeholder="Search events..." class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <input type="text" placeholder="Search events..." class="admin-input w-full px-3 py-2 border border-gray-300 rounded-md">
             </div>
             <div class="flex gap-2">
-                <select class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <select class="admin-input px-3 py-2 border border-gray-300 rounded-md">
                     <option value="">All Categories</option>
                     <option value="1">Technology</option>
                     <option value="2">Business</option>
                     <option value="3">Education</option>
                 </select>
-                <select class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <select class="admin-input px-3 py-2 border border-gray-300 rounded-md">
                     <option value="">All Status</option>
                     <option value="upcoming">Upcoming</option>
                     <option value="ongoing">Ongoing</option>
@@ -89,7 +89,7 @@
                         <div class="text-sm text-gray-500">{{ $event->organizer->email ?? '' }}</div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
                             {{ $event->category->name ?? 'Uncategorized' }}
                         </span>
                     </td>
@@ -108,7 +108,7 @@
                             
                             if ($now < $startDate) {
                                 $status = 'upcoming';
-                                $statusClass = 'bg-blue-100 text-blue-800';
+                                $statusClass = 'bg-yellow-100 text-yellow-800';
                             } elseif ($now >= $startDate && $now <= $endDate) {
                                 $status = 'ongoing';
                                 $statusClass = 'bg-green-100 text-green-800';
@@ -123,10 +123,10 @@
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         <div class="flex space-x-2">
-                            <a href="{{ route('admin.events.show', $event) }}" class="text-blue-600 hover:text-blue-900">
+                            <a href="{{ route('admin.events.show', $event) }}" style="color: var(--color-primary);" class="hover:opacity-80">
                                 <i class="fas fa-eye"></i>
                             </a>
-                            <a href="{{ route('admin.events.edit', $event) }}" class="text-indigo-600 hover:text-indigo-900">
+                            <a href="{{ route('admin.events.edit', $event) }}" class="text-gray-600 hover:text-gray-900">
                                 <i class="fas fa-edit"></i>
                             </a>
                             <a href="{{ route('admin.events.participants', $event) }}" class="text-green-600 hover:text-green-900">

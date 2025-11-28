@@ -37,7 +37,7 @@ return [
 
     'guards' => [
         'web' => [
-            'driver' => 'session',
+            'driver' => env('AUTH_GUARD_DRIVER', 'session'),
             'provider' => 'users',
         ],
     ],

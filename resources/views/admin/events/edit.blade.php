@@ -33,7 +33,7 @@
                 <div>
                     <label for="title" class="block text-sm font-medium text-gray-700">Event Title *</label>
                     <input type="text" name="title" id="title" value="{{ old('title', $event->title) }}" 
-                           class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 @error('title') border-red-500 @enderror" 
+                           class="mt-1 block w-full border-gray-300 rounded-md shadow-sm admin-input @error('title') border-red-500 @enderror" 
                            required>
                     @error('title')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -44,7 +44,7 @@
                 <div>
                     <label for="description" class="block text-sm font-medium text-gray-700">Description *</label>
                     <textarea name="description" id="description" rows="4" 
-                              class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 @error('description') border-red-500 @enderror" 
+                              class="mt-1 block w-full border-gray-300 rounded-md shadow-sm admin-input @error('description') border-red-500 @enderror" 
                               required>{{ old('description', $event->description) }}</textarea>
                     @error('description')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -55,7 +55,7 @@
                 <div>
                     <label for="category_id" class="block text-sm font-medium text-gray-700">Category *</label>
                     <select name="category_id" id="category_id" 
-                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 @error('category_id') border-red-500 @enderror" 
+                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm admin-input @error('category_id') border-red-500 @enderror" 
                             required>
                         <option value="">Select a category</option>
                         @foreach($categories as $category)
@@ -73,7 +73,7 @@
                 <div>
                     <label for="location" class="block text-sm font-medium text-gray-700">Location *</label>
                     <input type="text" name="location" id="location" value="{{ old('location', $event->location) }}" 
-                           class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 @error('location') border-red-500 @enderror" 
+                           class="mt-1 block w-full border-gray-300 rounded-md shadow-sm admin-input @error('location') border-red-500 @enderror" 
                            placeholder="e.g., Jakarta Convention Center, Online via Zoom" required>
                     @error('location')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -84,7 +84,7 @@
                 <div>
                     <label for="event_type" class="block text-sm font-medium text-gray-700">Event Type</label>
                     <select name="event_type" id="event_type" 
-                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 @error('event_type') border-red-500 @enderror">
+                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm admin-input @error('event_type') border-red-500 @enderror">
                         <option value="offline" {{ old('event_type', $event->event_type) == 'offline' ? 'selected' : '' }}>Offline (Physical Event)</option>
                         <option value="online" {{ old('event_type', $event->event_type) == 'online' ? 'selected' : '' }}>Online (Virtual Event)</option>
                         <option value="hybrid" {{ old('event_type', $event->event_type) == 'hybrid' ? 'selected' : '' }}>Hybrid (Both Online & Offline)</option>
@@ -100,7 +100,7 @@
                         <label for="start_date" class="block text-sm font-medium text-gray-700">Start Date *</label>
                         <input type="datetime-local" name="start_date" id="start_date" 
                                value="{{ old('start_date', \Carbon\Carbon::parse($event->start_date)->format('Y-m-d\TH:i')) }}" 
-                               class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 @error('start_date') border-red-500 @enderror" 
+                               class="mt-1 block w-full border-gray-300 rounded-md shadow-sm admin-input @error('start_date') border-red-500 @enderror" 
                                required>
                         @error('start_date')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -110,7 +110,7 @@
                         <label for="end_date" class="block text-sm font-medium text-gray-700">End Date *</label>
                         <input type="datetime-local" name="end_date" id="end_date" 
                                value="{{ old('end_date', \Carbon\Carbon::parse($event->end_date)->format('Y-m-d\TH:i')) }}" 
-                               class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 @error('end_date') border-red-500 @enderror" 
+                               class="mt-1 block w-full border-gray-300 rounded-md shadow-sm admin-input @error('end_date') border-red-500 @enderror" 
                                required>
                         @error('end_date')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -125,7 +125,7 @@
                 <div>
                     <label for="quota" class="block text-sm font-medium text-gray-700">Max Participants (Quota) *</label>
                     <input type="number" name="quota" id="quota" value="{{ old('quota', $event->quota) }}" 
-                           class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 @error('quota') border-red-500 @enderror" 
+                           class="mt-1 block w-full border-gray-300 rounded-md shadow-sm admin-input @error('quota') border-red-500 @enderror" 
                            min="1" required>
                     @error('quota')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -136,7 +136,7 @@
                 <div>
                     <label for="price" class="block text-sm font-medium text-gray-700">Price (IDR) *</label>
                     <input type="number" name="price" id="price" value="{{ old('price', $event->price) }}" 
-                           class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 @error('price') border-red-500 @enderror" 
+                           class="mt-1 block w-full border-gray-300 rounded-md shadow-sm admin-input @error('price') border-red-500 @enderror" 
                            min="0" step="1000" required>
                     @error('price')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -147,7 +147,7 @@
                 <div>
                     <label for="status" class="block text-sm font-medium text-gray-700">Status *</label>
                     <select name="status" id="status" 
-                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 @error('status') border-red-500 @enderror" 
+                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm admin-input @error('status') border-red-500 @enderror" 
                             required>
                         <option value="draft" {{ old('status', $event->status) == 'draft' ? 'selected' : '' }}>Draft</option>
                         <option value="published" {{ old('status', $event->status) == 'published' ? 'selected' : '' }}>Published</option>
@@ -173,7 +173,7 @@
                         {{ $event->image ? 'Replace Image' : 'Event Image' }}
                     </label>
                     <input type="file" name="image" id="image" accept="image/*" 
-                           class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 @error('image') border-red-500 @enderror">
+                           class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100 @error('image') border-red-500 @enderror">
                     @error('image')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
@@ -189,7 +189,7 @@
                 <div>
                     <label for="contact_info" class="block text-sm font-medium text-gray-700">Contact Information</label>
                     <textarea name="contact_info" id="contact_info" rows="3" 
-                              class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 @error('contact_info') border-red-500 @enderror" 
+                              class="mt-1 block w-full border-gray-300 rounded-md shadow-sm admin-input @error('contact_info') border-red-500 @enderror" 
                               placeholder="Phone: +62xxx, Email: contact@example.com, WhatsApp: +62xxx">{{ old('contact_info', $event->contact_info) }}</textarea>
                     @error('contact_info')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -200,7 +200,7 @@
                 <div>
                     <label for="requirements" class="block text-sm font-medium text-gray-700">Requirements</label>
                     <textarea name="requirements" id="requirements" rows="3" 
-                              class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 @error('requirements') border-red-500 @enderror" 
+                              class="mt-1 block w-full border-gray-300 rounded-md shadow-sm admin-input @error('requirements') border-red-500 @enderror" 
                               placeholder="e.g., Bring laptop, Valid ID, Dress code: Business casual">{{ old('requirements', $event->requirements) }}</textarea>
                     @error('requirements')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -214,7 +214,7 @@
             <a href="{{ route('admin.events.show', $event) }}" class="bg-gray-300 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-400">
                 Cancel
             </a>
-            <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700">
+            <button type="submit" style="background-color: var(--color-primary);" class="text-white px-6 py-2 rounded-md hover:opacity-90">
                 <i class="fas fa-save mr-2"></i>Update Event
             </button>
         </div>

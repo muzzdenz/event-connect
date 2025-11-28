@@ -10,7 +10,7 @@
     <div class="px-6 py-4 border-b border-gray-200">
         <div class="flex justify-between items-center">
             <h3 class="text-lg font-medium text-gray-900">Event Categories</h3>
-            <button onclick="openAddModal()" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+            <button onclick="openAddModal()" style="background-color: var(--color-primary);" class="text-white px-4 py-2 rounded-md hover:opacity-90">
                 <i class="fas fa-plus mr-2"></i>Add New Category
             </button>
         </div>
@@ -84,24 +84,24 @@
                             <div class="space-y-4">
                                 <div>
                                     <label for="name" class="block text-sm font-medium text-gray-700">Category Name</label>
-                                    <input type="text" name="name" id="name" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                    <input type="text" name="name" id="name" required class="admin-input mt-1 block w-full border-gray-300 rounded-md shadow-sm sm:text-sm">
                                 </div>
                                 
                                 <div>
                                     <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
-                                    <textarea name="description" id="description" rows="3" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></textarea>
+                                    <textarea name="description" id="description" rows="3" class="admin-input mt-1 block w-full border-gray-300 rounded-md shadow-sm sm:text-sm"></textarea>
                                 </div>
                                 
                                 <div>
                                     <label for="color" class="block text-sm font-medium text-gray-700">Color</label>
                                     <div class="mt-1 flex items-center">
-                                        <input type="color" name="color" id="color" value="#3B82F6" class="h-10 w-16 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                        <input type="color" name="color" id="color" value="#B22234" class="admin-input h-10 w-16 border-gray-300 rounded-md shadow-sm">
                                         <span class="ml-3 text-sm text-gray-500">Choose a color for this category</span>
                                     </div>
                                 </div>
                                 
                                 <div class="flex items-center">
-                                    <input type="checkbox" name="is_active" id="is_active" value="1" checked class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                    <input type="checkbox" name="is_active" id="is_active" value="1" checked style="accent-color: var(--color-primary);" class="h-4 w-4 border-gray-300 rounded">
                                     <label for="is_active" class="ml-2 block text-sm text-gray-900">Active</label>
                                 </div>
                             </div>
@@ -110,7 +110,7 @@
                 </div>
                 
                 <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                    <button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm">
+                    <button type="submit" style="background-color: var(--color-primary);" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm">
                         Save Category
                     </button>
                     <button type="button" onclick="closeCategoryModal()" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
@@ -164,7 +164,7 @@ function openAddModal() {
     document.getElementById('methodField').innerHTML = '';
     document.getElementById('name').value = '';
     document.getElementById('description').value = '';
-    document.getElementById('color').value = '#3B82F6';
+    document.getElementById('color').value = '#B22234';
     document.getElementById('is_active').checked = true;
     document.getElementById('categoryModal').classList.remove('hidden');
 }

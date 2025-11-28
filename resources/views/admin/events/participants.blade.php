@@ -10,21 +10,28 @@
 <body class="bg-gray-100">
     <!-- Sidebar -->
     <div class="flex h-screen">
-        <div class="w-64 bg-white shadow-lg">
+        <div class="w-64 shadow-lg" style="background-color: #B22234;">
             <div class="p-6">
-                <h1 class="text-2xl font-bold text-gray-800">Event Connect</h1>
-                <p class="text-gray-600 text-sm">Admin Dashboard</p>
+                <div class="flex items-center gap-3">
+                    <div class="h-10 w-10 rounded-full bg-white/20 flex items-center justify-center">
+                        <i class="fas fa-calendar-alt text-white"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-white">Event Connect</h1>
+                        <p class="text-white/80 text-xs">Admin Dashboard</p>
+                    </div>
+                </div>
             </div>
             <nav class="mt-6">
-                <a href="/admin/dashboard" class="flex items-center px-6 py-3 text-gray-600 hover:bg-gray-50">
+                <a href="/admin/dashboard" class="flex items-center px-6 py-3 text-white/80 hover:bg-white/10">
                     <i class="fas fa-tachometer-alt mr-3"></i>
                     Dashboard
                 </a>
-                <a href="/admin/events" class="flex items-center px-6 py-3 text-gray-700 bg-blue-50 border-r-4 border-blue-500">
+                <a href="/admin/events" class="flex items-center px-6 py-3 text-white bg-white/20 border-r-4 border-white">
                     <i class="fas fa-calendar-alt mr-3"></i>
                     Events
                 </a>
-                <a href="/admin/categories" class="flex items-center px-6 py-3 text-gray-600 hover:bg-gray-50">
+                <a href="/admin/categories" class="flex items-center px-6 py-3 text-white/80 hover:bg-white/10">
                     <i class="fas fa-tags mr-3"></i>
                     Categories
                 </a>
@@ -41,7 +48,7 @@
                         <p class="text-gray-600">Manage event participants and attendance</p>
                     </div>
                     <div class="flex gap-3">
-                        <a href="{{ route('attendance.qr-code', $event->id) }}" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center">
+                        <a href="{{ route('attendance.qr-code', $event->id) }}" style="background-color: #B22234;" class="text-white px-6 py-3 rounded-lg hover:opacity-90 font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center">
                             <i class="fas fa-qrcode mr-2"></i>View QR Code
                         </a>
                         <a href="{{ route('admin.events.index') }}" class="bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700 font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center">
@@ -59,8 +66,8 @@
                             <p class="text-gray-600 text-sm">Total Registered</p>
                             <p class="text-3xl font-bold text-gray-800">{{ $event->registered_count }}</p>
                         </div>
-                        <div class="bg-blue-100 rounded-full p-3">
-                            <i class="fas fa-users text-blue-600 text-xl"></i>
+                        <div class="rounded-full p-3" style="background-color: rgba(178, 34, 52, 0.1);">
+                            <i class="fas fa-users text-xl" style="color: #B22234;"></i>
                         </div>
                     </div>
                 </div>

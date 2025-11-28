@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -31,31 +32,25 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required|string',
         ]);
 
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
-        }
-
-        if (Auth::attempt($request->only('email', 'password'))) {
+        if (Auth::attempt($credentials, $request->boolean('remember'))) {
+            $request->session()->regenerate();
             $user = Auth::user();
-            
-            // Redirect based on role
+
             if ($user->isSuperAdmin() || $user->isAdmin()) {
                 return redirect()->route('admin.dashboard');
-            } else {
-                return redirect()->route('participant.dashboard');
             }
+
+            return redirect()->route('participant.dashboard');
         }
 
-        return redirect()->back()
-            ->withErrors(['email' => 'Invalid credentials'])
-            ->withInput();
+        return back()->withErrors([
+            'email' => 'Invalid credentials'
+        ])->withInput();
     }
 
     /**
@@ -71,12 +66,10 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
+            return back()->withErrors($validator)->withInput();
         }
 
-        $user = User::create([
+        User::create([
             'name' => $request->full_name,
             'full_name' => $request->full_name,
             'email' => $request->email,
@@ -84,7 +77,6 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        // Redirect to login page after successful registration
         return redirect()->route('login')
             ->with('success', 'Registration successful! Please login to continue.');
     }
@@ -92,9 +84,42 @@ class AuthController extends Controller
     /**
      * Handle logout
      */
-    public function logout()
+    public function logout(Request $request)
     {
         Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
         return redirect()->route('login');
+    }
+
+    /**
+     * Create session from API token (compatibility endpoint)
+     */
+    public function createSessionFromToken(Request $request): JsonResponse
+    {
+        $request->validate([
+            'token' => 'required|string',
+            'email' => 'required|email',
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'User not found'
+            ], 404);
+        }
+
+        Auth::login($user);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Session created successfully',
+            'redirect_url' => $user->isSuperAdmin() || $user->isAdmin()
+                ? route('admin.dashboard')
+                : route('participant.dashboard'),
+        ]);
     }
 }

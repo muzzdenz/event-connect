@@ -21,15 +21,15 @@
     <div class="px-6 py-4 border-b border-gray-200">
         <div class="flex flex-col sm:flex-row gap-4">
             <div class="flex-1">
-                <input type="text" placeholder="Search users..." class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <input type="text" placeholder="Search users..." class="admin-input w-full px-3 py-2 border border-gray-300 rounded-md">
             </div>
             <div class="flex gap-2">
-                <select class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <select class="admin-input px-3 py-2 border border-gray-300 rounded-md">
                     <option value="">All Roles</option>
                     <option value="admin">Admin</option>
                     <option value="participant">Participant</option>
                 </select>
-                <select class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <select class="admin-input px-3 py-2 border border-gray-300 rounded-md">
                     <option value="">All Status</option>
                     <option value="active">Active</option>
                     <option value="inactive">Inactive</option>
@@ -72,7 +72,7 @@
                         </div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $user->role === 'admin' ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800' }}">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $user->role === 'admin' ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800' }}">
                             {{ ucfirst($user->role) }}
                         </span>
                     </td>
@@ -89,10 +89,10 @@
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         <div class="flex space-x-2">
-                            <a href="{{ route('admin.users.show', $user) }}" class="text-blue-600 hover:text-blue-900">
+                            <a href="{{ route('admin.users.show', $user) }}" style="color: var(--color-primary);" class="hover:opacity-80">
                                 <i class="fas fa-eye"></i>
                             </a>
-                            <a href="{{ route('admin.users.edit', $user) }}" class="text-indigo-600 hover:text-indigo-900">
+                            <a href="{{ route('admin.users.edit', $user) }}" class="text-gray-600 hover:text-gray-900">
                                 <i class="fas fa-edit"></i>
                             </a>
                             <button class="text-red-600 hover:text-red-900" onclick="confirmDelete({{ $user->id }})">

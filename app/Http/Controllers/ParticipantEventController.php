@@ -2,15 +2,34 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Event;
 use App\Models\Category;
+use App\Models\Event;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class ParticipantEventController extends Controller
 {
     /**
-     * Display events with search and filter
+     * Display home page with event recommendations
+     */
+    public function home(): View
+    {
+        $events = Event::with(['organizer', 'category'])
+            ->published()
+            ->active()
+            ->upcoming()
+            ->open()
+            ->orderBy('start_date', 'asc')
+            ->take(6)
+            ->get();
+
+        $categories = Category::where('is_active', true)->orderBy('name')->get();
+
+        return view('participant.events.home', compact('events', 'categories'));
+    }
+
+    /**
+     * Display events with search and filter (Explore page)
      */
     public function index(Request $request): View
     {
@@ -119,11 +138,34 @@ class ParticipantEventController extends Controller
         }
 
         // Price filters
-        if ($request->has('price_min') && is_numeric($request->price_min)) {
-            $query->where('price', '>=', $request->price_min);
+        // Support either explicit price_min/price_max or compact price_range
+        $priceMin = $request->has('price_min') && is_numeric($request->price_min)
+            ? (float) $request->price_min
+            : null;
+        $priceMax = $request->has('price_max') && is_numeric($request->price_max)
+            ? (float) $request->price_max
+            : null;
+
+        if (!$priceMin && !$priceMax && $request->filled('price_range')) {
+            $range = $request->price_range;
+            if ($range === 'free') {
+                $priceMin = 0; $priceMax = 0;
+            } elseif ($range === '0-100000') {
+                $priceMin = 0; $priceMax = 100000;
+            } elseif ($range === '100000-500000') {
+                $priceMin = 100000; $priceMax = 500000;
+            } elseif ($range === '500000-1000000') {
+                $priceMin = 500000; $priceMax = 1000000;
+            } elseif ($range === '1000000+') {
+                $priceMin = 1000000; $priceMax = null;
+            }
         }
-        if ($request->has('price_max') && is_numeric($request->price_max)) {
-            $query->where('price', '<=', $request->price_max);
+
+        if ($priceMin !== null) {
+            $query->where('price', '>=', $priceMin);
+        }
+        if ($priceMax !== null) {
+            $query->where('price', '<=', $priceMax);
         }
 
         // Date filters
@@ -149,8 +191,8 @@ class ParticipantEventController extends Controller
             $query->whereRaw('quota > registered_count');
         }
 
-        // Quick date filters
-        if ($request->has('date_filter')) {
+        // Quick date filters (only when provided and non-empty)
+        if ($request->filled('date_filter')) {
             $this->applyDateFilter($query, $request->date_filter);
         }
     }

@@ -19,18 +19,23 @@ class ParticipantDashboardController extends Controller
     {
         $user = Auth::user();
         
-        // Get user's registered events
+        // Get user's registered events (with event details)
         $registeredEvents = EventParticipant::where('user_id', $user->id)
             ->with('event')
             ->orderBy('created_at', 'desc')
             ->get();
         
-        // Get upcoming events
-        $upcomingEvents = Event::where('start_date', '>=', now())
-            ->where('status', 'active')
-            ->orderBy('start_date', 'asc')
-            ->limit(5)
-            ->get();
+        // Get upcoming events JOINED by user (not global list)
+        $upcomingEvents = $registeredEvents
+            ->filter(function ($participant) {
+                return $participant->event
+                    && optional($participant->event->start_date)->isAfter(now());
+            })
+            ->sortBy(function ($participant) {
+                return $participant->event->start_date;
+            })
+            ->take(5)
+            ->values();
         
         // Get user statistics
         $stats = [
@@ -40,5 +45,35 @@ class ParticipantDashboardController extends Controller
         ];
 
         return view('participant.dashboard', compact('registeredEvents', 'upcomingEvents', 'stats'));
+    }
+
+    /**
+     * Display profile settings page
+     */
+    public function profile()
+    {
+        $user = Auth::user();
+        return view('participant.profile.index', compact('user'));
+    }
+
+    /**
+     * Update profile settings
+     */
+    public function updateProfile(Request $request)
+    {
+        $user = Auth::user();
+
+        $request->validate([
+            'full_name' => 'sometimes|required|string|max:255',
+            'name' => 'sometimes|required|string|max:255',
+            'email' => 'sometimes|required|string|email|max:255|unique:users,email,' . $user->id,
+            'phone' => 'nullable|string|max:20',
+            'bio' => 'nullable|string|max:1000',
+        ]);
+
+        $user->update($request->only(['full_name', 'name', 'email', 'phone', 'bio']));
+
+        return redirect()->route('participant.profile')
+            ->with('success', 'Profile updated successfully!');
     }
 }

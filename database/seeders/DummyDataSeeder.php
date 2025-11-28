@@ -301,7 +301,7 @@ class DummyDataSeeder extends Seeder
                 'email_verified_at' => now(),
                 'password' => Hash::make('password123'),
                 'role' => 'participant',
-                'is_organizer' => false,
+                
                 'phone' => '+6281234567807',
                 'bio' => 'Tech entrepreneur building the next unicorn startup',
                 'avatar' => null,
@@ -315,7 +315,7 @@ class DummyDataSeeder extends Seeder
                 'email_verified_at' => now(),
                 'password' => Hash::make('password123'),
                 'role' => 'participant',
-                'is_organizer' => false,
+                
                 'phone' => '+6281234567808',
                 'bio' => 'Financial analyst with expertise in fintech and blockchain',
                 'avatar' => null,
