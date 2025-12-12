@@ -1,10 +1,8 @@
-@extends('admin.layout')
+<?php $__env->startSection('title', 'Event Organizer Dashboard'); ?>
+<?php $__env->startSection('page-title', 'My Event Dashboard'); ?>
+<?php $__env->startSection('page-description', 'Welcome back! Here\'s what\'s happening with your events and participants.'); ?>
 
-@section('title', 'Event Organizer Dashboard')
-@section('page-title', 'My Event Dashboard')
-@section('page-description', 'Welcome back! Here\'s what\'s happening with your events and participants.')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
 
             <!-- Stats Cards -->
             <div class="p-6">
@@ -17,8 +15,8 @@
                             </div>
                             <div class="ml-4">
                                 <p class="text-sm font-medium text-gray-600">Event Participants</p>
-                                <p class="text-2xl font-semibold text-gray-900">{{ number_format($stats['total_users']) }}</p>
-                                <p class="text-sm text-green-600">+{{ $stats['this_month_participants'] }} this month</p>
+                                <p class="text-2xl font-semibold text-gray-900"><?php echo e(number_format($stats['total_users'])); ?></p>
+                                <p class="text-sm text-green-600">+<?php echo e($stats['this_month_participants']); ?> this month</p>
                             </div>
                         </div>
                     </div>
@@ -31,8 +29,8 @@
                             </div>
                             <div class="ml-4">
                                 <p class="text-sm font-medium text-gray-600">My Events</p>
-                                <p class="text-2xl font-semibold text-gray-900">{{ number_format($stats['total_events']) }}</p>
-                                <p class="text-sm text-green-600">+{{ $stats['this_month_events'] }} this month</p>
+                                <p class="text-2xl font-semibold text-gray-900"><?php echo e(number_format($stats['total_events'])); ?></p>
+                                <p class="text-sm text-green-600">+<?php echo e($stats['this_month_events']); ?> this month</p>
                             </div>
                         </div>
                     </div>
@@ -45,8 +43,8 @@
                             </div>
                             <div class="ml-4">
                                 <p class="text-sm font-medium text-gray-600">Active Events</p>
-                                <p class="text-2xl font-semibold text-gray-900">{{ number_format($stats['active_events']) }}</p>
-                                <p class="text-sm text-gray-500">{{ $stats['completed_events'] }} completed</p>
+                                <p class="text-2xl font-semibold text-gray-900"><?php echo e(number_format($stats['active_events'])); ?></p>
+                                <p class="text-sm text-gray-500"><?php echo e($stats['completed_events']); ?> completed</p>
                             </div>
                         </div>
                     </div>
@@ -59,8 +57,8 @@
                             </div>
                             <div class="ml-4">
                                 <p class="text-sm font-medium text-gray-600">Total Participants</p>
-                                <p class="text-2xl font-semibold text-gray-900">{{ number_format($stats['total_participants']) }}</p>
-                                <p class="text-sm text-gray-500">{{ $stats['total_categories'] }} categories</p>
+                                <p class="text-2xl font-semibold text-gray-900"><?php echo e(number_format($stats['total_participants'])); ?></p>
+                                <p class="text-sm text-gray-500"><?php echo e($stats['total_categories']); ?> categories</p>
                             </div>
                         </div>
                     </div>
@@ -87,24 +85,24 @@
                     <div class="bg-white rounded-lg shadow p-6">
                         <h3 class="text-lg font-semibold text-gray-800 mb-4">Recent Activities</h3>
                         <div class="space-y-4">
-                            @forelse($recentActivities as $activity)
+                            <?php $__empty_1 = true; $__currentLoopData = $recentActivities; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $activity): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                             <div class="flex items-start space-x-3">
                                 <div class="flex-shrink-0">
-                                    <div class="w-8 h-8 rounded-full bg-{{ $activity['color'] ?? 'blue' }}-100 flex items-center justify-center">
-                                        <i class="fas fa-{{ $activity['icon'] ?? 'info-circle' }} text-{{ $activity['color'] ?? 'blue' }}-600 text-sm"></i>
+                                    <div class="w-8 h-8 rounded-full bg-<?php echo e($activity['color'] ?? 'blue'); ?>-100 flex items-center justify-center">
+                                        <i class="fas fa-<?php echo e($activity['icon'] ?? 'info-circle'); ?> text-<?php echo e($activity['color'] ?? 'blue'); ?>-600 text-sm"></i>
                                     </div>
                                 </div>
                                 <div class="flex-1 min-w-0">
-                                    <p class="text-sm text-gray-900">{{ $activity['message'] ?? 'Activity' }}</p>
-                                    <p class="text-xs text-gray-500">{{ isset($activity['time']) ? $activity['time']->diffForHumans() : 'Recently' }}</p>
+                                    <p class="text-sm text-gray-900"><?php echo e($activity['message'] ?? 'Activity'); ?></p>
+                                    <p class="text-xs text-gray-500"><?php echo e(isset($activity['time']) ? $activity['time']->diffForHumans() : 'Recently'); ?></p>
                                 </div>
                             </div>
-                            @empty
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                             <div class="text-center py-8 text-gray-500">
                                 <i class="fas fa-bell-slash text-4xl mb-4"></i>
                                 <p>No recent activities</p>
                             </div>
-                            @endforelse
+                            <?php endif; ?>
                         </div>
                     </div>
 
@@ -112,23 +110,23 @@
                     <div class="bg-white rounded-lg shadow p-6">
                         <h3 class="text-lg font-semibold text-gray-800 mb-4">Top Events by Participants</h3>
                         <div class="space-y-4">
-                            @forelse($topEvents as $event)
+                            <?php $__empty_1 = true; $__currentLoopData = $topEvents; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $event): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                             <div class="flex items-center justify-between">
                                 <div class="flex-1 min-w-0">
-                                    <p class="text-sm font-medium text-gray-900 truncate">{{ $event->title ?? 'Untitled Event' }}</p>
-                                    <p class="text-xs text-gray-500">by {{ $event->organizer->full_name ?? 'Unknown' }}</p>
+                                    <p class="text-sm font-medium text-gray-900 truncate"><?php echo e($event->title ?? 'Untitled Event'); ?></p>
+                                    <p class="text-xs text-gray-500">by <?php echo e($event->organizer->full_name ?? 'Unknown'); ?></p>
                                 </div>
                                 <div class="flex items-center space-x-2">
-                                    <span class="text-sm text-gray-600">{{ $event->participants_count ?? 0 }} participants</span>
-                                    <div class="w-2 h-2 rounded-full" style="background-color: {{ $event->category->color ?? '#3B82F6' }}"></div>
+                                    <span class="text-sm text-gray-600"><?php echo e($event->participants_count ?? 0); ?> participants</span>
+                                    <div class="w-2 h-2 rounded-full" style="background-color: <?php echo e($event->category->color ?? '#3B82F6'); ?>"></div>
                                 </div>
                             </div>
-                            @empty
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                             <div class="text-center py-8 text-gray-500">
                                 <i class="fas fa-calendar-times text-4xl mb-4"></i>
                                 <p>No events yet</p>
                             </div>
-                            @endforelse
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
@@ -140,10 +138,10 @@
         new Chart(monthlyCtx, {
             type: 'line',
             data: {
-                labels: @json($monthlyEvents['months']),
+                labels: <?php echo json_encode($monthlyEvents['months'], 15, 512) ?>,
                 datasets: [{
                     label: 'Events Created',
-                    data: @json($monthlyEvents['events']),
+                    data: <?php echo json_encode($monthlyEvents['events'], 15, 512) ?>,
                     borderColor: 'rgb(178, 34, 52)',
                     backgroundColor: 'rgba(178, 34, 52, 0.1)',
                     tension: 0.4,
@@ -173,10 +171,10 @@
         new Chart(categoryCtx, {
             type: 'doughnut',
             data: {
-                labels: @json($categoryStats->pluck('name')),
+                labels: <?php echo json_encode($categoryStats->pluck('name'), 15, 512) ?>,
                 datasets: [{
-                    data: @json($categoryStats->pluck('count')),
-                    backgroundColor: @json($categoryStats->pluck('color'))
+                    data: <?php echo json_encode($categoryStats->pluck('count'), 15, 512) ?>,
+                    backgroundColor: <?php echo json_encode($categoryStats->pluck('color'), 15, 512) ?>
                 }]
             },
             options: {
@@ -189,4 +187,6 @@
             }
         });
     </script>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('admin.layout', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\xampp\htdocs\event-connect\resources\views/admin/dashboard.blade.php ENDPATH**/ ?>

@@ -2,14 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Event;
-use App\Models\EventParticipant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Session;
+use App\Services\BackendApiService;
+use Illuminate\Support\Facades\Log;
 
 class AttendanceController extends Controller
 {
+    protected BackendApiService $api;
+
+    public function __construct(BackendApiService $api)
+    {
+        $this->api = $api;
+    }
     /**
      * Show QR scanner page for participant
      */
@@ -21,14 +28,25 @@ class AttendanceController extends Controller
     /**
      * Show QR code display for Event Organizer
      */
-    public function showQRCode(Event $event)
+    public function showQRCode($eventId)
     {
-        // Check if user is organizer of this event or super admin
-        if ($event->user_id !== Auth::id() && !Auth::user()->isAdmin() && !(method_exists(Auth::user(), 'isSuperAdmin') && Auth::user()->isSuperAdmin())) {
-            abort(403, 'You are not authorized to view this QR code');
-        }
+        try {
+            $token = Session::get('api_token');
 
-        return view('admin.events.qr-code', compact('event'));
+            $response = $this->api->withToken($token)->get("events/{$eventId}");
+            $eventData = $response['data'] ?? null;
+
+            if (!$eventData) {
+                abort(404, 'Event not found');
+            }
+
+            $event = $this->arrayToObject($eventData);
+
+            return view('admin.events.qr-code', compact('event'));
+        } catch (\Exception $e) {
+            Log::error('Show QR Code error: ' . $e->getMessage());
+            abort(500, 'Unable to load QR Code page');
+        }
     }
 
     /**
@@ -46,53 +64,59 @@ class AttendanceController extends Controller
                 ->withInput();
         }
 
-        $user = Auth::user();
+        try {
+            $token = Session::get('api_token');
+            $response = $this->api->withToken($token)->post('attendance/mark', [
+                'qr_code' => $request->qr_code,
+            ]);
 
-        // Find participant by their unique QR code
-        // QR code contains the unique string (e.g., "user_1_event_1_1234567890_abc123")
-        $qrCodeString = $request->qr_code;
-        $participant = EventParticipant::where('qr_code_string', $qrCodeString)
-            ->where('user_id', $user->id)
-            ->first();
+            if (isset($response['success']) && $response['success']) {
+                return redirect()->back()->with('success', $response['message'] ?? 'Attendance marked successfully');
+            }
 
-        if (!$participant) {
-            return redirect()->back()
-                ->with('error', 'Invalid QR code or you are not authorized to use this QR code');
+            return redirect()->back()->with('error', $response['message'] ?? 'Failed to mark attendance');
+        } catch (\Exception $e) {
+            Log::error('Mark attendance error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Unable to mark attendance');
         }
-
-        $event = $participant->event;
-
-        if ($participant->status === 'attended') {
-            return redirect()->back()
-                ->with('error', 'Attendance already marked');
-        }
-
-        $participant->update([
-            'status' => 'attended',
-            'attended_at' => now()
-        ]);
-
-        return redirect()->back()
-            ->with('success', 'Attendance marked successfully! Event: ' . $event->title);
     }
 
     /**
      * Get event participants list for organizer
      */
-    public function getParticipants(Event $event)
+    public function getParticipants($eventId)
     {
-        // Check if user is organizer or super admin
-        if ($event->user_id !== Auth::id() && !Auth::user()->isAdmin() && !(method_exists(Auth::user(), 'isSuperAdmin') && Auth::user()->isSuperAdmin())) {
-            abort(403, 'You are not authorized to view participants');
+        try {
+            $token = Session::get('api_token');
+
+            $eventResponse = $this->api->withToken($token)->get("events/{$eventId}");
+            $eventData = $eventResponse['data'] ?? null;
+            if (!$eventData) {
+                abort(404, 'Event not found');
+            }
+            $event = $this->arrayToObject($eventData);
+
+            $participantsResponse = $this->api->withToken($token)->get("events/{$eventId}/participants");
+            $participantsData = $participantsResponse['data']['data'] ?? $participantsResponse['data'] ?? [];
+            $participants = array_map(fn($p) => (object) $p, $participantsData);
+
+            return view('admin.events.participants', compact('event', 'participants'));
+        } catch (\Exception $e) {
+            Log::error('Get participants error: ' . $e->getMessage());
+            abort(500, 'Unable to load participants');
         }
+    }
 
-        $participants = EventParticipant::with('user')
-            ->where('event_id', $event->id)
-            ->orderBy('attended_at', 'desc')
-            ->orderBy('created_at', 'desc')
-            ->get();
-
-        return view('admin.events.participants', compact('event', 'participants'));
+    private function arrayToObject($array)
+    {
+        if (!is_array($array)) {
+            return $array;
+        }
+        $object = new \stdClass();
+        foreach ($array as $key => $value) {
+            $object->$key = is_array($value) ? $this->arrayToObject($value) : $value;
+        }
+        return $object;
     }
 }
 

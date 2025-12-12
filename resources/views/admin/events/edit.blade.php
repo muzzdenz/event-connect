@@ -9,9 +9,9 @@
     <!-- Header -->
     <div class="px-6 py-4 border-b border-gray-200">
         <div class="flex justify-between items-center">
-            <h3 class="text-lg font-medium text-gray-900">Edit Event: {{ $event->title }}</h3>
+            <h3 class="text-lg font-medium text-gray-900">Edit Event: {{ $event->title ?? 'Event' }}</h3>
             <div class="flex space-x-2">
-                <a href="{{ route('admin.events.show', $event) }}" class="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700">
+                <a href="{{ route('admin.events.show', $event->id) }}" class="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700">
                     <i class="fas fa-eye mr-2"></i>View Event
                 </a>
                 <a href="{{ route('admin.events.index') }}" class="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700">
@@ -22,7 +22,7 @@
     </div>
 
     <!-- Form -->
-    <form action="{{ route('admin.events.update', $event) }}" method="POST" enctype="multipart/form-data" class="p-6">
+    <form action="{{ route('admin.events.update', $event->id) }}" method="POST" enctype="multipart/form-data" class="p-6">
         @csrf
         @method('PUT')
         
@@ -85,9 +85,9 @@
                     <label for="event_type" class="block text-sm font-medium text-gray-700">Event Type</label>
                     <select name="event_type" id="event_type" 
                             class="mt-1 block w-full border-gray-300 rounded-md shadow-sm admin-input @error('event_type') border-red-500 @enderror">
-                        <option value="offline" {{ old('event_type', $event->event_type) == 'offline' ? 'selected' : '' }}>Offline (Physical Event)</option>
-                        <option value="online" {{ old('event_type', $event->event_type) == 'online' ? 'selected' : '' }}>Online (Virtual Event)</option>
-                        <option value="hybrid" {{ old('event_type', $event->event_type) == 'hybrid' ? 'selected' : '' }}>Hybrid (Both Online & Offline)</option>
+                        <option value="offline" {{ old('event_type', $event->event_type ?? 'offline') == 'offline' ? 'selected' : '' }}>Offline (Physical Event)</option>
+                        <option value="online" {{ old('event_type', $event->event_type ?? '') == 'online' ? 'selected' : '' }}>Online (Virtual Event)</option>
+                        <option value="hybrid" {{ old('event_type', $event->event_type ?? '') == 'hybrid' ? 'selected' : '' }}>Hybrid (Both Online & Offline)</option>
                     </select>
                     @error('event_type')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -190,7 +190,7 @@
                     <label for="contact_info" class="block text-sm font-medium text-gray-700">Contact Information</label>
                     <textarea name="contact_info" id="contact_info" rows="3" 
                               class="mt-1 block w-full border-gray-300 rounded-md shadow-sm admin-input @error('contact_info') border-red-500 @enderror" 
-                              placeholder="Phone: +62xxx, Email: contact@example.com, WhatsApp: +62xxx">{{ old('contact_info', $event->contact_info) }}</textarea>
+                              placeholder="Phone: +62xxx, Email: contact@example.com, WhatsApp: +62xxx">{{ old('contact_info', $event->contact_info ?? '') }}</textarea>
                     @error('contact_info')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
@@ -201,7 +201,7 @@
                     <label for="requirements" class="block text-sm font-medium text-gray-700">Requirements</label>
                     <textarea name="requirements" id="requirements" rows="3" 
                               class="mt-1 block w-full border-gray-300 rounded-md shadow-sm admin-input @error('requirements') border-red-500 @enderror" 
-                              placeholder="e.g., Bring laptop, Valid ID, Dress code: Business casual">{{ old('requirements', $event->requirements) }}</textarea>
+                              placeholder="e.g., Bring laptop, Valid ID, Dress code: Business casual">{{ old('requirements', $event->requirements ?? '') }}</textarea>
                     @error('requirements')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
@@ -211,7 +211,7 @@
 
         <!-- Submit Button -->
         <div class="mt-8 flex justify-end space-x-4">
-            <a href="{{ route('admin.events.show', $event) }}" class="bg-gray-300 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-400">
+                <a href="{{ route('admin.events.show', $event->id) }}" class="bg-gray-300 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-400">
                 Cancel
             </a>
             <button type="submit" style="background-color: var(--color-primary);" class="text-white px-6 py-2 rounded-md hover:opacity-90">

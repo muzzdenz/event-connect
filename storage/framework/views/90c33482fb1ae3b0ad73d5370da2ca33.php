@@ -1,10 +1,8 @@
-@extends('admin.layout')
+<?php $__env->startSection('title', 'Categories Management'); ?>
+<?php $__env->startSection('page-title', 'Categories Management'); ?>
+<?php $__env->startSection('page-description', 'Manage event categories'); ?>
 
-@section('title', 'Categories Management')
-@section('page-title', 'Categories Management')
-@section('page-description', 'Manage event categories')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="bg-white rounded-lg shadow">
     <!-- Header -->
     <div class="px-6 py-4 border-b border-gray-200">
@@ -16,67 +14,71 @@
         </div>
     </div>
 
-    @if(isset($error))
+    <?php if(isset($error)): ?>
         <div class="p-6">
             <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-                {{ $error }}
+                <?php echo e($error); ?>
+
             </div>
         </div>
-    @endif
+    <?php endif; ?>
 
     <!-- Categories Grid -->
     <div class="p-6">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            @forelse($categories as $category)
-            @php
+            <?php $__empty_1 = true; $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+            <?php
                 $cat = is_object($category) ? $category : (object) $category;
-            @endphp
+            ?>
             <div class="bg-gray-50 rounded-lg p-6 border border-gray-200 hover:shadow-md transition-shadow">
                 <div class="flex items-center justify-between mb-4">
                     <div class="flex items-center">
-                        <div class="w-4 h-4 rounded-full mr-3" style="background-color: {{ $cat->color ?? '#3B82F6' }}"></div>
-                        <h4 class="text-lg font-medium text-gray-900">{{ $cat->name ?? 'Unnamed' }}</h4>
+                        <div class="w-4 h-4 rounded-full mr-3" style="background-color: <?php echo e($cat->color ?? '#3B82F6'); ?>"></div>
+                        <h4 class="text-lg font-medium text-gray-900"><?php echo e($cat->name ?? 'Unnamed'); ?></h4>
                     </div>
                     <div class="flex space-x-2">
-                        <button onclick="openEditModal({{ $cat->id ?? 0 }}, '{{ addslashes($cat->name ?? '') }}', '{{ addslashes($cat->description ?? '') }}', '{{ $cat->color ?? '#3B82F6' }}')" class="text-indigo-600 hover:text-indigo-900">
+                        <button onclick="openEditModal(<?php echo e($cat->id ?? 0); ?>, '<?php echo e(addslashes($cat->name ?? '')); ?>', '<?php echo e(addslashes($cat->description ?? '')); ?>', '<?php echo e($cat->color ?? '#3B82F6'); ?>')" class="text-indigo-600 hover:text-indigo-900">
                             <i class="fas fa-edit"></i>
                         </button>
-                        <button onclick="confirmDelete({{ $cat->id ?? 0 }})" class="text-red-600 hover:text-red-900">
+                        <button onclick="confirmDelete(<?php echo e($cat->id ?? 0); ?>)" class="text-red-600 hover:text-red-900">
                             <i class="fas fa-trash"></i>
                         </button>
                     </div>
                 </div>
                 
                 <div class="text-sm text-gray-600 mb-4">
-                    {{ $cat->description ?? 'No description available' }}
+                    <?php echo e($cat->description ?? 'No description available'); ?>
+
                 </div>
                 
                 <div class="flex items-center justify-between text-sm">
                     <span class="text-gray-500">
                         <i class="fas fa-calendar mr-1"></i>
-                        {{ $cat->events_count ?? 0 }} events
+                        <?php echo e($cat->events_count ?? 0); ?> events
                     </span>
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ ($cat->is_active ?? true) ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                        {{ ($cat->is_active ?? true) ? 'Active' : 'Inactive' }}
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <?php echo e(($cat->is_active ?? true) ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'); ?>">
+                        <?php echo e(($cat->is_active ?? true) ? 'Active' : 'Inactive'); ?>
+
                     </span>
                 </div>
             </div>
-            @empty
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
             <div class="col-span-full text-center py-12">
                 <i class="fas fa-tags text-4xl text-gray-400 mb-4"></i>
                 <h3 class="text-lg font-medium text-gray-900 mb-2">No categories found</h3>
                 <p class="text-gray-500">Get started by creating your first category.</p>
             </div>
-            @endforelse
+            <?php endif; ?>
         </div>
     </div>
 
     <!-- Pagination -->
-    @if($categories->hasPages())
+    <?php if($categories->hasPages()): ?>
     <div class="px-6 py-4 border-t border-gray-200">
-        {{ $categories->links() }}
+        <?php echo e($categories->links()); ?>
+
     </div>
-    @endif
+    <?php endif; ?>
 </div>
 
 <!-- Add/Edit Category Modal -->
@@ -84,7 +86,7 @@
     <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
         <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
             <form id="categoryForm" method="POST">
-                @csrf
+                <?php echo csrf_field(); ?>
                 <div id="methodField"></div>
                 
                 <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
@@ -147,8 +149,8 @@
             </div>
             <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                 <form id="deleteForm" method="POST" class="inline">
-                    @csrf
-                    @method('DELETE')
+                    <?php echo csrf_field(); ?>
+                    <?php echo method_field('DELETE'); ?>
                     <button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
                         Delete
                     </button>
@@ -161,13 +163,13 @@
     </div>
 </div>
 
-@endsection
+<?php $__env->stopSection(); ?>
 
-@section('scripts')
+<?php $__env->startSection('scripts'); ?>
 <script>
 function openAddModal() {
     document.getElementById('modalTitle').textContent = 'Add New Category';
-    document.getElementById('categoryForm').action = '{{ route("admin.categories.store") }}';
+    document.getElementById('categoryForm').action = '<?php echo e(route("admin.categories.store")); ?>';
     document.getElementById('methodField').innerHTML = '';
     document.getElementById('name').value = '';
     document.getElementById('description').value = '';
@@ -178,7 +180,7 @@ function openAddModal() {
 function openEditModal(id, name, description, color) {
     document.getElementById('modalTitle').textContent = 'Edit Category';
     document.getElementById('categoryForm').action = '/admin/categories/' + id;
-    document.getElementById('methodField').innerHTML = '@method("PUT")';
+    document.getElementById('methodField').innerHTML = '<?php echo method_field("PUT"); ?>';
     document.getElementById('name').value = name;
     document.getElementById('description').value = description;
     document.getElementById('color').value = color;
@@ -211,4 +213,5 @@ document.getElementById('deleteModal').addEventListener('click', function(e) {
     }
 });
 </script>
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('admin.layout', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\xampp\htdocs\event-connect\resources\views/admin/categories/index.blade.php ENDPATH**/ ?>

@@ -111,9 +111,38 @@ class AdminDashboardController extends Controller
     private function getDashboardStats($token)
     {
         try {
-            // Get organizer's events from API
-            $eventsResponse = $this->api->withToken($token)->get('admin/events');
-            $events = collect($eventsResponse['data']['data'] ?? []);
+            $user = Session::get('user');
+            
+            // Try to get organizer's events from API
+            $events = collect([]);
+            
+            try {
+                $eventsResponse = $this->api->withToken($token)->get('events/my-events');
+                $events = collect($eventsResponse['data']['data'] ?? $eventsResponse['data'] ?? []);
+            } catch (\Exception $e) {
+                Log::warning('events/my-events failed, trying /events: ' . $e->getMessage());
+                
+                // Fallback: get all events and filter by user
+                try {
+                    $eventsResponse = $this->api->withToken($token)->get('events');
+                    $allEvents = collect($eventsResponse['data']['data'] ?? $eventsResponse['data'] ?? []);
+                    
+                    Log::info('Fetched from /events: ' . $allEvents->count() . ' total events');
+                    
+                    // Filter by current user (organizer)
+                    $userId = $user['id'] ?? null;
+                    if ($userId) {
+                        $events = $allEvents->filter(function($event) use ($userId) {
+                            $eventUserId = $event['user_id'] ?? $event['organizer_id'] ?? null;
+                            return $eventUserId == $userId;
+                        })->values();
+                        
+                        Log::info('Filtered events for user ' . $userId . ': ' . $events->count() . ' events');
+                    }
+                } catch (\Exception $e2) {
+                    Log::error('Both endpoints failed: ' . $e2->getMessage());
+                }
+            }
             
             // Get categories
             $categoriesResponse = $this->api->get('categories');
@@ -171,9 +200,27 @@ class AdminDashboardController extends Controller
     private function getMonthlyEventData($token)
     {
         try {
+            $user = Session::get('user');
+            
             // Get organizer's events
-            $eventsResponse = $this->api->withToken($token)->get('admin/events');
-            $events = collect($eventsResponse['data']['data'] ?? []);
+            $events = collect([]);
+            
+            try {
+                $eventsResponse = $this->api->withToken($token)->get('events/my-events');
+                $events = collect($eventsResponse['data']['data'] ?? $eventsResponse['data'] ?? []);
+            } catch (\Exception $e) {
+                // Fallback to /events with filter
+                try {
+                    $eventsResponse = $this->api->withToken($token)->get('events');
+                    $allEvents = collect($eventsResponse['data']['data'] ?? $eventsResponse['data'] ?? []);
+                    $userId = $user['id'] ?? null;
+                    if ($userId) {
+                        $events = $allEvents->filter(fn($e) => isset($e['user_id']) && $e['user_id'] == $userId)->values();
+                    }
+                } catch (\Exception $e2) {
+                    Log::error('Monthly event data fetch failed: ' . $e2->getMessage());
+                }
+            }
             
             // Initialize months array
             $months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -224,8 +271,26 @@ class AdminDashboardController extends Controller
     private function getTopEvents($token)
     {
         try {
-            $eventsResponse = $this->api->withToken($token)->get('admin/events');
-            $events = collect($eventsResponse['data']['data'] ?? []);
+            $user = Session::get('user');
+            
+            $events = collect([]);
+            
+            try {
+                $eventsResponse = $this->api->withToken($token)->get('events/my-events');
+                $events = collect($eventsResponse['data']['data'] ?? $eventsResponse['data'] ?? []);
+            } catch (\Exception $e) {
+                // Fallback to /events with filter
+                try {
+                    $eventsResponse = $this->api->withToken($token)->get('events');
+                    $allEvents = collect($eventsResponse['data']['data'] ?? $eventsResponse['data'] ?? []);
+                    $userId = $user['id'] ?? null;
+                    if ($userId) {
+                        $events = $allEvents->filter(fn($e) => isset($e['user_id']) && $e['user_id'] == $userId)->values();
+                    }
+                } catch (\Exception $e2) {
+                    Log::error('Top events fetch failed: ' . $e2->getMessage());
+                }
+            }
             
             return $events
                 ->sortByDesc('participants_count')
