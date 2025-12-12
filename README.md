@@ -1,102 +1,185 @@
-# Event Connect API
+# Event Connect - Frontend Application
 
-A comprehensive event management system built with Laravel 12.33.0, featuring user authentication, event management, participation tracking, feedback system, and certificate generation.
+A comprehensive event management system frontend built with Laravel 12.33.0 and Tailwind CSS. This application connects to an external Event Connect API backend for all data operations.
+
+## 🎯 Purpose
+
+This is a **frontend/client application** that provides a user interface for:
+- Event discovery and browsing
+- Event participation management
+- Admin dashboard for event organizers
+- QR-based attendance tracking
+- User profile and notification management
+
+All data is fetched from and synchronized with the Event Connect API backend.
 
 ## 🚀 Features
 
-### Authentication & Profile Management
-- User registration and login
-- Password reset functionality
-- Profile management (view/edit)
-- Organizer status management
-
-### Event Management
-- Create, read, update, delete events
-- Event search and filtering
-- Category management
-- QR code generation for events
-- Image upload support
-
-### Event Participation
-- Join/cancel event participation
-- QR-based attendance tracking
-- Payment processing (ready for integration)
-- Participation history
-
-### Feedback & Certificates
-- Submit event feedback (required for certificates)
-- PDF certificate generation
-- Rating system (1-5 stars)
+### User Features
+- User registration, login, and profile management
+- Event search, filtering, and discovery
+- Event participation (join/cancel)
+- Feedback submission and ratings
+- Notification viewing
 - Certificate download
 
-### Notifications
-- Event reminders (1 day & 1 hour before)
-- System notifications
-- Read/unread status tracking
+### Organizer/Admin Features
+- Create and manage events
+- View event participants
+- QR code generation for attendance
+- Event statistics and analytics
+- Participant attendance tracking
+- Event editing and publishing
+
+### General
+- Responsive design with Tailwind CSS
+- Event categories and filtering
+- User authentication via token
+- Payment gateway integration (Xendit)
 
 ## 🛠️ Technology Stack
 
-- **Backend:** Laravel 12.33.0
-- **Database:** MySQL
-- **Authentication:** Laravel Sanctum
-- **QR Code:** SimpleSoftwareIO/simple-qrcode
-- **PDF Generation:** barryvdh/laravel-dompdf
-- **Frontend Documentation:** Tailwind CSS
+- **Frontend Framework:** Laravel 12.33.0 with Blade Templates
+- **Styling:** Tailwind CSS
+- **JavaScript:** ES6+ with Vite bundling
+- **HTTP Client:** GuzzleHTTP (for API requests)
+- **Backend API:** External Event Connect API (staging)
+- **Database:** None (frontend only; all data via API)
 
 ## 📋 Requirements
 
 - PHP 8.3+
-- MySQL 5.7+
 - Composer
-- Laravel 12.33.0
+- Node.js & npm (for frontend assets)
+- Modern web browser
 
 ## 🚀 Installation
 
 1. **Clone the repository**
    ```bash
    git clone <repository-url>
-   cd event_connect
+   cd event-connect
    ```
 
-2. **Install dependencies**
+2. **Install PHP dependencies**
    ```bash
    composer install
    ```
 
-3. **Environment setup**
+3. **Install frontend dependencies**
+   ```bash
+   npm install
+   ```
+
+4. **Environment setup**
    ```bash
    cp .env.example .env
    php artisan key:generate
    ```
 
-4. **Database configuration**
-   Update `.env` file with your MySQL credentials:
+5. **Configure API endpoint**
+   Update `.env` with your backend API URL:
    ```env
-   DB_CONNECTION=mysql
-   DB_HOST=127.0.0.1
-   DB_PORT=8889
-   DB_DATABASE=event_connect
-   DB_USERNAME=root
-   DB_PASSWORD=root
+   API_BASE_URL=https://staging-api.eventconnect.com
+   API_TIMEOUT=30
    ```
 
-5. **Run migrations and seeders**
+6. **Build frontend assets**
    ```bash
-   php artisan migrate
-   php artisan db:seed
+   npm run build
    ```
 
-6. **Start the server**
+7. **Start the development server**
    ```bash
    php artisan serve --port=8003
    ```
 
-## 📚 API Documentation
+## 🔗 API Integration
 
-Visit the interactive API documentation at:
+This frontend communicates with the Event Connect API backend via `BackendApiService`. The service handles:
+- Authentication token management
+- API request/response formatting
+- Error handling and logging
+
+Key API endpoints used:
+- `/auth/login` - User authentication
+- `/events` - Event listing and details
+- `/events/my-events` - Organizer's events
+- `/participants` - Event participation
+- `/attendance` - QR-based attendance tracking
+- `/users/profile` - User profile management
+
+## 🧪 Development
+
+### Running the development server
+```bash
+php artisan serve
 ```
-http://127.0.0.1:8003/api-docs
+
+### Building assets in watch mode
+```bash
+npm run dev
 ```
+
+### Build for production
+```bash
+npm run build
+```
+
+## 📁 Project Structure
+
+```
+resources/
+├── views/          # Blade templates
+│   ├── admin/      # Admin dashboard views
+│   ├── user/       # User-facing views
+│   └── layouts/    # Layout templates
+├── css/            # Tailwind CSS
+├── js/             # JavaScript files
+app/
+├── Http/
+│   ├── Controllers/    # Route controllers
+│   └── Middleware/     # HTTP middleware
+├── Services/
+│   └── BackendApiService.php  # API client
+└── Models/         # Data models (used locally)
+config/
+├── services.php    # API configuration
+└── ...
+```
+
+## 🔐 Authentication
+
+Users authenticate via the Event Connect API:
+1. Submit login credentials
+2. Receive API token from backend
+3. Token stored in session
+4. Included in all subsequent API requests
+
+## 🐛 Troubleshooting
+
+### API connection issues
+- Verify `API_BASE_URL` in `.env`
+- Check network connectivity to backend
+- Review Laravel logs: `storage/logs/laravel.log`
+
+### Asset compilation errors
+```bash
+npm install
+npm run build
+```
+
+### Session/token issues
+- Clear cache: `php artisan cache:clear`
+- Clear sessions: `php artisan session:flush`
+
+## 📝 License
+
+[Specify your license here]
+
+## 👥 Contributors
+
+[List contributors here]
 
 ## 🔗 API Endpoints
 
