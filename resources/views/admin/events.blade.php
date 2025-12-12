@@ -89,8 +89,8 @@
                     <td class="px-6 py-4">
                         <div class="flex items-center">
                             <div class="flex-shrink-0 h-12 w-12">
-                                @if(isset($event->image) && $event->image)
-                                    <img class="h-12 w-12 rounded-lg object-cover" src="{{ $event->image }}" alt="{{ $event->title }}">
+                                @if(isset($event->image_url) && $event->image_url)
+                                    <img class="h-12 w-12 rounded-lg object-cover" src="{{ $event->image_url }}" alt="{{ $event->title }}">
                                 @else
                                     <div class="h-12 w-12 rounded-lg bg-gray-200 flex items-center justify-center">
                                         <i class="fas fa-calendar text-gray-400"></i>

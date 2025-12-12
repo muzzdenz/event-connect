@@ -43,8 +43,8 @@
             <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
                 <!-- Event Image -->
                 <div class="h-48 bg-gradient-to-r from-red-500 to-pink-500 relative">
-                    @if(isset($event->image) && $event->image)
-                        <img src="{{ $event->image }}" alt="{{ $event->title ?? 'Event' }}" class="w-full h-full object-cover">
+                    @if(isset($event->image_url) && $event->image_url)
+                        <img src="{{ $event->image_url }}" alt="{{ $event->title ?? 'Event' }}" class="w-full h-full object-cover">
                     @else
                         <div class="flex items-center justify-center h-full">
                             <i class="fas fa-calendar-alt text-6xl text-white opacity-50"></i>

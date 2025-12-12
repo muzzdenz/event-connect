@@ -8,8 +8,8 @@
 <!-- Action Bar -->
 <div class="mb-6 flex justify-between items-center">
     <div>
-        <h2 class="text-2xl font-bold text-gray-900">My Events</h2>
-        <p class="text-gray-600">Manage your created events</p>
+        <h2 class="text-2xl font-bold text-gray-900">Events Management</h2>
+        <p class="text-gray-600">Manage all events and their details.</p>
     </div>
     <a href="{{ route('admin.events.create') }}" style="background-color: var(--color-primary);" class="text-white px-6 py-3 rounded-lg hover:opacity-90 font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center text-lg">
         <i class="fas fa-plus mr-2"></i>Create New Event
@@ -20,7 +20,7 @@
     <!-- Header -->
     <div class="px-6 py-4 border-b border-gray-200">
         <div class="flex justify-between items-center">
-            <h3 class="text-lg font-medium text-gray-900">My Events</h3>
+            <h3 class="text-lg font-medium text-gray-900">All Events</h3>
             <a href="{{ route('admin.events.create') }}" style="background-color: var(--color-primary);" class="text-white px-6 py-3 rounded-lg hover:opacity-90 font-medium shadow-md hover:shadow-lg transition-all duration-200 flex items-center">
                 <i class="fas fa-plus mr-2"></i>Create New Event
             </a>
@@ -72,82 +72,88 @@
             <thead class="bg-gray-50">
                 <tr>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Event</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Organizer</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date & Time</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Participants</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                 </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
                 @forelse($events as $event)
                 <tr class="hover:bg-gray-50">
-                    <td class="px-6 py-4 whitespace-nowrap">
+                    <td class="px-6 py-4">
                         <div class="flex items-center">
-                            <div class="flex-shrink-0 h-16 w-16">
-                                @if(isset($event->image) && $event->image)
-                                    <img class="h-16 w-16 rounded-lg object-cover" src="{{ $event->image }}" alt="{{ $event->title }}">
+                            <div class="flex-shrink-0 h-12 w-12">
+                                @if(isset($event->image_url) && $event->image_url)
+                                    <img class="h-12 w-12 rounded-lg object-cover" src="{{ $event->image_url }}" alt="{{ $event->title }}">
                                 @else
-                                    <div class="h-16 w-16 rounded-lg bg-gray-300 flex items-center justify-center">
+                                    <div class="h-12 w-12 rounded-lg bg-gray-300 flex items-center justify-center">
                                         <i class="fas fa-calendar text-gray-600"></i>
                                     </div>
                                 @endif
                             </div>
-                            <div class="ml-4">
-                                <div class="text-sm font-medium text-gray-900">{{ $event->title ?? 'Untitled' }}</div>
-                                <div class="text-sm text-gray-500">{{ \Illuminate\Support\Str::limit($event->description ?? '', 50) }}</div>
+                            <div class="ml-4 max-w-xs">
+                                <div class="text-sm font-medium text-gray-900 truncate">{{ $event->title ?? 'Untitled' }}</div>
+                                <div class="text-xs text-gray-500">zoom</div>
                             </div>
                         </div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">
+                            @if(isset($event->organizer))
+                                {{ is_object($event->organizer) ? ($event->organizer->name ?? $event->organizer->full_name ?? 'Unknown') : ($event->organizer['name'] ?? $event->organizer['full_name'] ?? 'Unknown') }}
+                            @else
+                                Unknown Organizer
+                            @endif
+                        </div>
+                        <div class="text-xs text-gray-500">
+                            @if(isset($event->organizer))
+                                {{ is_object($event->organizer) ? ($event->organizer->email ?? '') : ($event->organizer['email'] ?? '') }}
+                            @endif
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
                         @if(isset($event->category))
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                                {{ is_object($event->category) ? ($event->category->name ?? 'Uncategorized') : ($event->category['name'] ?? 'Uncategorized') }}
+                            @php
+                                $categoryName = is_object($event->category) ? ($event->category->name ?? 'Uncategorized') : ($event->category['name'] ?? 'Uncategorized');
+                                $categoryColor = is_object($event->category) ? ($event->category->color ?? '#6B7280') : ($event->category['color'] ?? '#6B7280');
+                            @endphp
+                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium" style="background-color: {{ $categoryColor }}20; color: {{ $categoryColor }}">
+                                <span class="w-2 h-2 rounded-full mr-1.5" style="background-color: {{ $categoryColor }}"></span>
+                                {{ $categoryName }}
                             </span>
                         @else
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
                                 Uncategorized
                             </span>
                         @endif
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         @if(isset($event->start_date))
-                            <div>{{ \Carbon\Carbon::parse($event->start_date)->format('M d, Y') }}</div>
-                            <div class="text-gray-500">{{ \Carbon\Carbon::parse($event->start_date)->format('h:i A') }}</div>
+                            <div class="font-medium">{{ \Carbon\Carbon::parse($event->start_date)->format('M d, Y') }}</div>
+                            <div class="text-xs text-gray-500">{{ \Carbon\Carbon::parse($event->start_date)->format('h:i A') }} - {{ isset($event->end_date) ? \Carbon\Carbon::parse($event->end_date)->format('h:i A') : 'N/A' }}</div>
                         @else
-                            <div class="text-gray-500">No date</div>
+                            <div class="text-gray-400">No date</div>
                         @endif
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {{ $event->participants_count ?? 0 }} / {{ $event->quota ?? '∞' }}
+                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                        <div class="flex items-center">
+                            <div class="text-gray-900 font-medium">{{ $event->participants_count ?? $event->registered_count ?? 0 }}/{{ $event->quota ?? $event->max_participants ?? '∞' }}</div>
+                        </div>
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        @php
-                            $eventStatus = $event->status ?? 'draft';
-                            $statusClasses = [
-                                'draft' => 'bg-gray-100 text-gray-800',
-                                'published' => 'bg-green-100 text-green-800',
-                                'completed' => 'bg-blue-100 text-blue-800',
-                                'cancelled' => 'bg-red-100 text-red-800',
-                            ];
-                            $statusClass = $statusClasses[$eventStatus] ?? 'bg-gray-100 text-gray-800';
-                        @endphp
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $statusClass }}">
-                            {{ ucfirst($eventStatus) }}
-                        </span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <div class="flex space-x-2">
-                            <a href="{{ route('admin.events.show', $event->id) }}" style="color: var(--color-primary);" class="hover:opacity-80" title="View">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                        <div class="flex items-center gap-3">
+                            <a href="{{ route('admin.events.show', $event->id) }}" class="text-blue-600 hover:text-blue-800" title="View Details">
                                 <i class="fas fa-eye"></i>
                             </a>
-                            <a href="{{ route('admin.events.edit', $event->id) }}" class="text-gray-600 hover:text-gray-900" title="Edit">
+                            <a href="{{ route('admin.events.edit', $event->id) }}" class="text-yellow-600 hover:text-yellow-800" title="Edit">
                                 <i class="fas fa-edit"></i>
                             </a>
-                            <a href="{{ route('admin.events.participants', $event->id) }}" class="text-green-600 hover:text-green-900" title="Participants">
+                            <a href="{{ route('admin.events.participants', $event->id) }}" class="text-green-600 hover:text-green-800" title="Participants">
                                 <i class="fas fa-users"></i>
                             </a>
-                            <button class="text-red-600 hover:text-red-900" onclick="confirmDelete({{ $event->id }})" title="Delete">
+                            <button onclick="confirmDelete({{ $event->id }})" class="text-red-600 hover:text-red-800" title="Delete">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>

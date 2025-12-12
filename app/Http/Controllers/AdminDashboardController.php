@@ -117,14 +117,14 @@ class AdminDashboardController extends Controller
             $events = collect([]);
             
             try {
-                $eventsResponse = $this->api->withToken($token)->get('events/my-events');
+                $eventsResponse = $this->api->withToken($token)->get('events/my-events', ['per_page' => 100]);
                 $events = collect($eventsResponse['data']['data'] ?? $eventsResponse['data'] ?? []);
             } catch (\Exception $e) {
                 Log::warning('events/my-events failed, trying /events: ' . $e->getMessage());
-                
+
                 // Fallback: get all events and filter by user
                 try {
-                    $eventsResponse = $this->api->withToken($token)->get('events');
+                    $eventsResponse = $this->api->withToken($token)->get('events', ['per_page' => 100]);
                     $allEvents = collect($eventsResponse['data']['data'] ?? $eventsResponse['data'] ?? []);
                     
                     Log::info('Fetched from /events: ' . $allEvents->count() . ' total events');
@@ -151,11 +151,16 @@ class AdminDashboardController extends Controller
             // Calculate stats
             $now = Carbon::now();
             
+            // Calculate total participants from all events
+            $totalParticipants = $events->sum(function($event) {
+                return $event['participants_count'] ?? $event['registered_count'] ?? 0;
+            });
+
             return [
-                'total_users' => 0, // API endpoint belum ada
+                'total_users' => $totalParticipants, // Total participants across all events
                 'total_events' => $events->count(),
                 'total_categories' => $categories->count(),
-                'total_participants' => $events->sum('participants_count') ?? 0,
+                'total_participants' => $totalParticipants,
                 'total_feedbacks' => 0, // API endpoint belum ada
                 'active_events' => $events->filter(function($event) use ($now) {
                     return isset($event['start_date']) && Carbon::parse($event['start_date'])->isAfter($now);
@@ -167,7 +172,11 @@ class AdminDashboardController extends Controller
                 'this_month_events' => $events->filter(function($event) use ($now) {
                     return isset($event['created_at']) && Carbon::parse($event['created_at'])->month === $now->month;
                 })->count(),
-                'this_month_participants' => 0, // API endpoint belum ada
+                'this_month_participants' => $events->filter(function($event) use ($now) {
+                    return isset($event['created_at']) && Carbon::parse($event['created_at'])->month === $now->month;
+                })->sum(function($event) {
+                    return $event['participants_count'] ?? $event['registered_count'] ?? 0;
+                }),
             ];
         } catch (\Exception $e) {
             Log::error('Get dashboard stats error: ' . $e->getMessage());
@@ -206,12 +215,12 @@ class AdminDashboardController extends Controller
             $events = collect([]);
             
             try {
-                $eventsResponse = $this->api->withToken($token)->get('events/my-events');
+                $eventsResponse = $this->api->withToken($token)->get('events/my-events', ['per_page' => 100]);
                 $events = collect($eventsResponse['data']['data'] ?? $eventsResponse['data'] ?? []);
             } catch (\Exception $e) {
                 // Fallback to /events with filter
                 try {
-                    $eventsResponse = $this->api->withToken($token)->get('events');
+                    $eventsResponse = $this->api->withToken($token)->get('events', ['per_page' => 100]);
                     $allEvents = collect($eventsResponse['data']['data'] ?? $eventsResponse['data'] ?? []);
                     $userId = $user['id'] ?? null;
                     if ($userId) {
@@ -276,12 +285,12 @@ class AdminDashboardController extends Controller
             $events = collect([]);
             
             try {
-                $eventsResponse = $this->api->withToken($token)->get('events/my-events');
+                $eventsResponse = $this->api->withToken($token)->get('events/my-events', ['per_page' => 100]);
                 $events = collect($eventsResponse['data']['data'] ?? $eventsResponse['data'] ?? []);
             } catch (\Exception $e) {
                 // Fallback to /events with filter
                 try {
-                    $eventsResponse = $this->api->withToken($token)->get('events');
+                    $eventsResponse = $this->api->withToken($token)->get('events', ['per_page' => 100]);
                     $allEvents = collect($eventsResponse['data']['data'] ?? $eventsResponse['data'] ?? []);
                     $userId = $user['id'] ?? null;
                     if ($userId) {

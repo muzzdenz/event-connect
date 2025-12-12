@@ -6,8 +6,8 @@
 <!-- Action Bar -->
 <div class="mb-6 flex justify-between items-center">
     <div>
-        <h2 class="text-2xl font-bold text-gray-900">My Events</h2>
-        <p class="text-gray-600">Manage your created events</p>
+        <h2 class="text-2xl font-bold text-gray-900">Events Management</h2>
+        <p class="text-gray-600">Manage all events and their details.</p>
     </div>
     <a href="<?php echo e(route('admin.events.create')); ?>" style="background-color: var(--color-primary);" class="text-white px-6 py-3 rounded-lg hover:opacity-90 font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center text-lg">
         <i class="fas fa-plus mr-2"></i>Create New Event
@@ -18,7 +18,7 @@
     <!-- Header -->
     <div class="px-6 py-4 border-b border-gray-200">
         <div class="flex justify-between items-center">
-            <h3 class="text-lg font-medium text-gray-900">My Events</h3>
+            <h3 class="text-lg font-medium text-gray-900">All Events</h3>
             <a href="<?php echo e(route('admin.events.create')); ?>" style="background-color: var(--color-primary);" class="text-white px-6 py-3 rounded-lg hover:opacity-90 font-medium shadow-md hover:shadow-lg transition-all duration-200 flex items-center">
                 <i class="fas fa-plus mr-2"></i>Create New Event
             </a>
@@ -72,85 +72,91 @@
             <thead class="bg-gray-50">
                 <tr>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Event</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Organizer</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date & Time</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Participants</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                 </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
                 <?php $__empty_1 = true; $__currentLoopData = $events; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $event): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                 <tr class="hover:bg-gray-50">
-                    <td class="px-6 py-4 whitespace-nowrap">
+                    <td class="px-6 py-4">
                         <div class="flex items-center">
-                            <div class="flex-shrink-0 h-16 w-16">
-                                <?php if(isset($event->image) && $event->image): ?>
-                                    <img class="h-16 w-16 rounded-lg object-cover" src="<?php echo e($event->image); ?>" alt="<?php echo e($event->title); ?>">
+                            <div class="flex-shrink-0 h-12 w-12">
+                                <?php if(isset($event->image_url) && $event->image_url): ?>
+                                    <img class="h-12 w-12 rounded-lg object-cover" src="<?php echo e($event->image_url); ?>" alt="<?php echo e($event->title); ?>">
                                 <?php else: ?>
-                                    <div class="h-16 w-16 rounded-lg bg-gray-300 flex items-center justify-center">
+                                    <div class="h-12 w-12 rounded-lg bg-gray-300 flex items-center justify-center">
                                         <i class="fas fa-calendar text-gray-600"></i>
                                     </div>
                                 <?php endif; ?>
                             </div>
-                            <div class="ml-4">
-                                <div class="text-sm font-medium text-gray-900"><?php echo e($event->title ?? 'Untitled'); ?></div>
-                                <div class="text-sm text-gray-500"><?php echo e(\Illuminate\Support\Str::limit($event->description ?? '', 50)); ?></div>
+                            <div class="ml-4 max-w-xs">
+                                <div class="text-sm font-medium text-gray-900 truncate"><?php echo e($event->title ?? 'Untitled'); ?></div>
+                                <div class="text-xs text-gray-500">zoom</div>
                             </div>
                         </div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">
+                            <?php if(isset($event->organizer)): ?>
+                                <?php echo e(is_object($event->organizer) ? ($event->organizer->name ?? $event->organizer->full_name ?? 'Unknown') : ($event->organizer['name'] ?? $event->organizer['full_name'] ?? 'Unknown')); ?>
+
+                            <?php else: ?>
+                                Unknown Organizer
+                            <?php endif; ?>
+                        </div>
+                        <div class="text-xs text-gray-500">
+                            <?php if(isset($event->organizer)): ?>
+                                <?php echo e(is_object($event->organizer) ? ($event->organizer->email ?? '') : ($event->organizer['email'] ?? '')); ?>
+
+                            <?php endif; ?>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
                         <?php if(isset($event->category)): ?>
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                                <?php echo e(is_object($event->category) ? ($event->category->name ?? 'Uncategorized') : ($event->category['name'] ?? 'Uncategorized')); ?>
+                            <?php
+                                $categoryName = is_object($event->category) ? ($event->category->name ?? 'Uncategorized') : ($event->category['name'] ?? 'Uncategorized');
+                                $categoryColor = is_object($event->category) ? ($event->category->color ?? '#6B7280') : ($event->category['color'] ?? '#6B7280');
+                            ?>
+                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium" style="background-color: <?php echo e($categoryColor); ?>20; color: <?php echo e($categoryColor); ?>">
+                                <span class="w-2 h-2 rounded-full mr-1.5" style="background-color: <?php echo e($categoryColor); ?>"></span>
+                                <?php echo e($categoryName); ?>
 
                             </span>
                         <?php else: ?>
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
                                 Uncategorized
                             </span>
                         <?php endif; ?>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         <?php if(isset($event->start_date)): ?>
-                            <div><?php echo e(\Carbon\Carbon::parse($event->start_date)->format('M d, Y')); ?></div>
-                            <div class="text-gray-500"><?php echo e(\Carbon\Carbon::parse($event->start_date)->format('h:i A')); ?></div>
+                            <div class="font-medium"><?php echo e(\Carbon\Carbon::parse($event->start_date)->format('M d, Y')); ?></div>
+                            <div class="text-xs text-gray-500"><?php echo e(\Carbon\Carbon::parse($event->start_date)->format('h:i A')); ?> - <?php echo e(isset($event->end_date) ? \Carbon\Carbon::parse($event->end_date)->format('h:i A') : 'N/A'); ?></div>
                         <?php else: ?>
-                            <div class="text-gray-500">No date</div>
+                            <div class="text-gray-400">No date</div>
                         <?php endif; ?>
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        <?php echo e($event->participants_count ?? 0); ?> / <?php echo e($event->quota ?? '∞'); ?>
-
+                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                        <div class="flex items-center">
+                            <div class="text-gray-900 font-medium"><?php echo e($event->participants_count ?? $event->registered_count ?? 0); ?>/<?php echo e($event->quota ?? $event->max_participants ?? '∞'); ?></div>
+                        </div>
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <?php
-                            $eventStatus = $event->status ?? 'draft';
-                            $statusClasses = [
-                                'draft' => 'bg-gray-100 text-gray-800',
-                                'published' => 'bg-green-100 text-green-800',
-                                'completed' => 'bg-blue-100 text-blue-800',
-                                'cancelled' => 'bg-red-100 text-red-800',
-                            ];
-                            $statusClass = $statusClasses[$eventStatus] ?? 'bg-gray-100 text-gray-800';
-                        ?>
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <?php echo e($statusClass); ?>">
-                            <?php echo e(ucfirst($eventStatus)); ?>
-
-                        </span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <div class="flex space-x-2">
-                            <a href="<?php echo e(route('admin.events.show', $event->id)); ?>" style="color: var(--color-primary);" class="hover:opacity-80" title="View">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                        <div class="flex items-center gap-3">
+                            <a href="<?php echo e(route('admin.events.show', $event->id)); ?>" class="text-blue-600 hover:text-blue-800" title="View Details">
                                 <i class="fas fa-eye"></i>
                             </a>
-                            <a href="<?php echo e(route('admin.events.edit', $event->id)); ?>" class="text-gray-600 hover:text-gray-900" title="Edit">
+                            <a href="<?php echo e(route('admin.events.edit', $event->id)); ?>" class="text-yellow-600 hover:text-yellow-800" title="Edit">
                                 <i class="fas fa-edit"></i>
                             </a>
-                            <a href="<?php echo e(route('admin.events.participants', $event->id)); ?>" class="text-green-600 hover:text-green-900" title="Participants">
+                            <a href="<?php echo e(route('admin.events.participants', $event->id)); ?>" class="text-green-600 hover:text-green-800" title="Participants">
                                 <i class="fas fa-users"></i>
                             </a>
-                            <button class="text-red-600 hover:text-red-900" onclick="confirmDelete(<?php echo e($event->id); ?>)" title="Delete">
+                            <button onclick="confirmDelete(<?php echo e($event->id); ?>)" class="text-red-600 hover:text-red-800" title="Delete">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>
@@ -234,4 +240,4 @@ document.getElementById('deleteModal').addEventListener('click', function(e) {
 });
 </script>
 <?php $__env->stopSection(); ?>
-<?php echo $__env->make('admin.layout', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\xampp\htdocs\event-connect\resources\views/admin/events/index.blade.php ENDPATH**/ ?>
+<?php echo $__env->make('admin.layout', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Study\Kuliah\Semester-7\CP\event-connect\resources\views/admin/events/index.blade.php ENDPATH**/ ?>

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 
 class Event extends Model
@@ -31,6 +32,8 @@ class Event extends Model
         'is_active',
     ];
 
+    protected $appends = ['image_url', 'qr_code_url'];
+
     protected function casts(): array
     {
         return [
@@ -40,6 +43,23 @@ class Event extends Model
             'price' => 'decimal:2',
             'is_active' => 'boolean',
         ];
+    }
+
+    // Accessors for Storage URLs
+    public function getImageUrlAttribute()
+    {
+        if ($this->image) {
+            return Storage::disk('public')->url($this->image);
+        }
+        return null;
+    }
+
+    public function getQrCodeUrlAttribute()
+    {
+        if ($this->qr_code) {
+            return Storage::disk('public')->url($this->qr_code);
+        }
+        return null;
     }
 
     // Relationships

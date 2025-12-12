@@ -32,23 +32,23 @@ class EventController extends Controller
             }
 
             // Build query parameters
-            $params = [];
-            
+            $params = ['per_page' => 100]; // Get more events
+
             if ($request->has('search') && $request->search) {
                 $params['search'] = $request->search;
             }
-            
+
             if ($request->has('category_id') && $request->category_id) {
                 $params['category_id'] = $request->category_id;
             }
-            
+
             if ($request->has('status') && $request->status) {
                 $params['status'] = $request->status;
             }
 
             // Try different endpoints
             $eventsData = [];
-            
+
             try {
                 // Try /events/my-events first
                 $response = $this->api->withToken($token)->get('events/my-events', $params);

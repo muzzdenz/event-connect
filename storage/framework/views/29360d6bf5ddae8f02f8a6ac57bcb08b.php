@@ -167,4 +167,4 @@ function closeDeleteModal() {
 }
 </script>
 <?php $__env->stopSection(); ?>
-<?php echo $__env->make('admin.layout', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\xampp\htdocs\event-connect\resources\views/admin/users/index.blade.php ENDPATH**/ ?>
+<?php echo $__env->make('admin.layout', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Study\Kuliah\Semester-7\CP\event-connect\resources\views/admin/users/index.blade.php ENDPATH**/ ?>

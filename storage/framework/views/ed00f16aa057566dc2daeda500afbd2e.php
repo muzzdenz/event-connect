@@ -5,85 +5,85 @@
 <?php $__env->startSection('content'); ?>
 
             <!-- Stats Cards -->
-            <div class="p-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="p-0 md:p-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-6 md:mb-8">
                     <!-- Total Users -->
-                    <div class="bg-white rounded-lg shadow p-6">
+                    <div class="bg-white rounded-lg shadow p-4 md:p-6">
                         <div class="flex items-center">
-                            <div class="p-3 rounded-full" style="background-color: rgba(178, 34, 52, 0.1); color: var(--color-primary);">
-                                <i class="fas fa-users text-2xl"></i>
+                            <div class="p-2 md:p-3 rounded-full" style="background-color: rgba(178, 34, 52, 0.1); color: var(--color-primary);">
+                                <i class="fas fa-users text-xl md:text-2xl"></i>
                             </div>
-                            <div class="ml-4">
-                                <p class="text-sm font-medium text-gray-600">Event Participants</p>
-                                <p class="text-2xl font-semibold text-gray-900"><?php echo e(number_format($stats['total_users'])); ?></p>
-                                <p class="text-sm text-green-600">+<?php echo e($stats['this_month_participants']); ?> this month</p>
+                            <div class="ml-3 md:ml-4">
+                                <p class="text-xs md:text-sm font-medium text-gray-600">Event Participants</p>
+                                <p class="text-xl md:text-2xl font-semibold text-gray-900"><?php echo e(number_format($stats['total_users'])); ?></p>
+                                <p class="text-xs md:text-sm text-green-600">+<?php echo e($stats['this_month_participants']); ?> this month</p>
                             </div>
                         </div>
                     </div>
 
                     <!-- Total Events -->
-                    <div class="bg-white rounded-lg shadow p-6">
+                    <div class="bg-white rounded-lg shadow p-4 md:p-6">
                         <div class="flex items-center">
-                            <div class="p-3 rounded-full bg-green-100 text-green-600">
-                                <i class="fas fa-calendar-alt text-2xl"></i>
+                            <div class="p-2 md:p-3 rounded-full bg-green-100 text-green-600">
+                                <i class="fas fa-calendar-alt text-xl md:text-2xl"></i>
                             </div>
-                            <div class="ml-4">
-                                <p class="text-sm font-medium text-gray-600">My Events</p>
-                                <p class="text-2xl font-semibold text-gray-900"><?php echo e(number_format($stats['total_events'])); ?></p>
-                                <p class="text-sm text-green-600">+<?php echo e($stats['this_month_events']); ?> this month</p>
+                            <div class="ml-3 md:ml-4">
+                                <p class="text-xs md:text-sm font-medium text-gray-600">My Events</p>
+                                <p class="text-xl md:text-2xl font-semibold text-gray-900"><?php echo e(number_format($stats['total_events'])); ?></p>
+                                <p class="text-xs md:text-sm text-green-600">+<?php echo e($stats['this_month_events']); ?> this month</p>
                             </div>
                         </div>
                     </div>
 
                     <!-- Active Events -->
-                    <div class="bg-white rounded-lg shadow p-6">
+                    <div class="bg-white rounded-lg shadow p-4 md:p-6">
                         <div class="flex items-center">
-                            <div class="p-3 rounded-full bg-yellow-100 text-yellow-600">
-                                <i class="fas fa-clock text-2xl"></i>
+                            <div class="p-2 md:p-3 rounded-full bg-yellow-100 text-yellow-600">
+                                <i class="fas fa-clock text-xl md:text-2xl"></i>
                             </div>
-                            <div class="ml-4">
-                                <p class="text-sm font-medium text-gray-600">Active Events</p>
-                                <p class="text-2xl font-semibold text-gray-900"><?php echo e(number_format($stats['active_events'])); ?></p>
-                                <p class="text-sm text-gray-500"><?php echo e($stats['completed_events']); ?> completed</p>
+                            <div class="ml-3 md:ml-4">
+                                <p class="text-xs md:text-sm font-medium text-gray-600">Active Events</p>
+                                <p class="text-xl md:text-2xl font-semibold text-gray-900"><?php echo e(number_format($stats['active_events'])); ?></p>
+                                <p class="text-xs md:text-sm text-gray-500"><?php echo e($stats['completed_events']); ?> completed</p>
                             </div>
                         </div>
                     </div>
 
                     <!-- Organizers -->
-                    <div class="bg-white rounded-lg shadow p-6">
+                    <div class="bg-white rounded-lg shadow p-4 md:p-6">
                         <div class="flex items-center">
-                            <div class="p-3 rounded-full bg-purple-100 text-purple-600">
-                                <i class="fas fa-crown text-2xl"></i>
+                            <div class="p-2 md:p-3 rounded-full bg-purple-100 text-purple-600">
+                                <i class="fas fa-crown text-xl md:text-2xl"></i>
                             </div>
-                            <div class="ml-4">
-                                <p class="text-sm font-medium text-gray-600">Total Participants</p>
-                                <p class="text-2xl font-semibold text-gray-900"><?php echo e(number_format($stats['total_participants'])); ?></p>
-                                <p class="text-sm text-gray-500"><?php echo e($stats['total_categories']); ?> categories</p>
+                            <div class="ml-3 md:ml-4">
+                                <p class="text-xs md:text-sm font-medium text-gray-600">Total Participants</p>
+                                <p class="text-xl md:text-2xl font-semibold text-gray-900"><?php echo e(number_format($stats['total_participants'])); ?></p>
+                                <p class="text-xs md:text-sm text-gray-500"><?php echo e($stats['total_categories']); ?> categories</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Charts Row -->
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 mb-6 md:mb-8">
                     <!-- Monthly Events Chart -->
-                    <div class="bg-white rounded-lg shadow p-6">
-                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Events Created This Year</h3>
+                    <div class="bg-white rounded-lg shadow p-4 md:p-6">
+                        <h3 class="text-base md:text-lg font-semibold text-gray-800 mb-4">Events Created This Year</h3>
                         <canvas id="monthlyEventsChart" width="400" height="200"></canvas>
                     </div>
 
                     <!-- Category Distribution -->
-                    <div class="bg-white rounded-lg shadow p-6">
-                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Events by Category</h3>
+                    <div class="bg-white rounded-lg shadow p-4 md:p-6">
+                        <h3 class="text-base md:text-lg font-semibold text-gray-800 mb-4">Events by Category</h3>
                         <canvas id="categoryChart" width="400" height="200"></canvas>
                     </div>
                 </div>
 
                 <!-- Recent Activities & Top Events -->
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
                     <!-- Recent Activities -->
-                    <div class="bg-white rounded-lg shadow p-6">
-                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Recent Activities</h3>
+                    <div class="bg-white rounded-lg shadow p-4 md:p-6">
+                        <h3 class="text-base md:text-lg font-semibold text-gray-800 mb-4">Recent Activities</h3>
                         <div class="space-y-4">
                             <?php $__empty_1 = true; $__currentLoopData = $recentActivities; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $activity): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                             <div class="flex items-start space-x-3">
@@ -107,8 +107,8 @@
                     </div>
 
                     <!-- Top Events -->
-                    <div class="bg-white rounded-lg shadow p-6">
-                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Top Events by Participants</h3>
+                    <div class="bg-white rounded-lg shadow p-4 md:p-6">
+                        <h3 class="text-base md:text-lg font-semibold text-gray-800 mb-4">Top Events by Participants</h3>
                         <div class="space-y-4">
                             <?php $__empty_1 = true; $__currentLoopData = $topEvents; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $event): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                             <div class="flex items-center justify-between">
@@ -189,4 +189,4 @@
     </script>
 <?php $__env->stopSection(); ?>
 
-<?php echo $__env->make('admin.layout', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\xampp\htdocs\event-connect\resources\views/admin/dashboard.blade.php ENDPATH**/ ?>
+<?php echo $__env->make('admin.layout', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Study\Kuliah\Semester-7\CP\event-connect\resources\views/admin/dashboard.blade.php ENDPATH**/ ?>

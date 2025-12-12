@@ -63,7 +63,7 @@ class ParticipantEventController extends Controller
         'title' => $event->title ?? 'No Title',
         'description' => $event->description ?? '',
         'image' => $event->image ?? null,
-        'image_url' => $this->api->assetUrl($event->image ?? null),
+        'image_url' => $event->image_url ?? $this->api->assetUrl($event->image ?? null),
         'location' => $event->location ?? 'No Location',
         'price' => $event->price ?? 0,
         'status' => $event->status ?? 'draft',
@@ -76,11 +76,11 @@ class ParticipantEventController extends Controller
         'participants_count' => $event->registered_count ?? $event->current_participants ?? 0,
         'quota' => $event->quota ?? $event->max_participants ?? 0,
         'registered_count' => $event->registered_count ?? $event->current_participants ?? 0,
-        'start_date' => isset($event->start_date) 
-            ? \Carbon\Carbon::parse($event->start_date) 
+        'start_date' => isset($event->start_date)
+            ? \Carbon\Carbon::parse($event->start_date)
             : \Carbon\Carbon::now(),
-        'end_date' => isset($event->end_date) 
-            ? \Carbon\Carbon::parse($event->end_date) 
+        'end_date' => isset($event->end_date)
+            ? \Carbon\Carbon::parse($event->end_date)
             : (isset($event->start_date) ? \Carbon\Carbon::parse($event->start_date) : \Carbon\Carbon::now()),
     ];
 }
