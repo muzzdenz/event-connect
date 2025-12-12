@@ -1,6 +1,8 @@
-# Event Connect API
+# Event Connect - Frontend Application
 
-A comprehensive event management system built with Laravel 12.33.0, featuring user authentication, event management, participation tracking, feedback system, and certificate generation.
+> **⚠️ This is a frontend-only Laravel application** that renders user interfaces and connects to a separate backend API.
+
+A comprehensive event management system frontend built with Laravel 12.33.0. This application provides the user interface for event browsing, participation, and management, while all business logic and data operations are handled by the backend API.
 
 ## 🚀 Features
 
@@ -36,19 +38,19 @@ A comprehensive event management system built with Laravel 12.33.0, featuring us
 
 ## 🛠️ Technology Stack
 
-- **Backend:** Laravel 12.33.0
-- **Database:** MySQL
-- **Authentication:** Laravel Sanctum
-- **QR Code:** SimpleSoftwareIO/simple-qrcode
-- **PDF Generation:** barryvdh/laravel-dompdf
-- **Frontend Documentation:** Tailwind CSS
+- **Framework:** Laravel 12.33.0 (Frontend)
+- **Views:** Blade Templates
+- **Styling:** Tailwind CSS
+- **HTTP Client:** Laravel HTTP Client (via BackendApiService)
+- **Session Storage:** File-based (no database required)
+- **Backend API:** Separate Laravel API (required)
 
 ## 📋 Requirements
 
 - PHP 8.3+
-- MySQL 5.7+
 - Composer
-- Laravel 12.33.0
+- Backend API server (running separately)
+- File write permissions (for sessions/cache)
 
 ## 🚀 Installation
 
@@ -69,26 +71,28 @@ A comprehensive event management system built with Laravel 12.33.0, featuring us
    php artisan key:generate
    ```
 
-4. **Database configuration**
-   Update `.env` file with your MySQL credentials:
+4. **Configure Backend API**
+   Update `.env` file with your backend API URL:
    ```env
-   DB_CONNECTION=mysql
-   DB_HOST=127.0.0.1
-   DB_PORT=8889
-   DB_DATABASE=event_connect
-   DB_USERNAME=root
-   DB_PASSWORD=root
+   APP_URL=http://localhost:8000
+   API_BASE_URL=https://staging-eventconnect.sre-telkomuniversity-pwt.org/api
+   VITE_API_BASE_URL=https://staging-eventconnect.sre-telkomuniversity-pwt.org/api
+
+   # Sessions & Cache (file-based, no database needed)
+   SESSION_DRIVER=file
+   CACHE_STORE=file
+   QUEUE_CONNECTION=sync
    ```
 
-5. **Run migrations and seeders**
+5. **Clear configuration cache**
    ```bash
-   php artisan migrate
-   php artisan db:seed
+   php artisan config:clear
+   php artisan cache:clear
    ```
 
-6. **Start the server**
+6. **Start the frontend server**
    ```bash
-   php artisan serve --port=8003
+   php artisan serve --port=8000
    ```
 
 ## 📚 API Documentation

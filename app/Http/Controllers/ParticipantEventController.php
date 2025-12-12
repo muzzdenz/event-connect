@@ -6,6 +6,7 @@ use App\Services\BackendApiService;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 
 class ParticipantEventController extends Controller
 {
@@ -91,9 +92,11 @@ class ParticipantEventController extends Controller
 {
     try {
         Log::info('Fetching events from API for home page...');
-        
-        // Get events from API with pagination
-        $eventsResponse = $this->api->get('events', ['per_page' => 50]);
+
+        // Get events from API with caching (5 minutes) and reduced count for faster load
+        $eventsResponse = Cache::remember('home_events', 300, function() {
+            return $this->api->get('events', ['per_page' => 12]);
+        });
         Log::info('API events response:', ['has_data' => isset($eventsResponse['data'])]);
         Log::info('API raw response structure:', [
             'keys' => array_keys($eventsResponse),

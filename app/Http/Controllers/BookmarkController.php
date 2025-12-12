@@ -31,8 +31,9 @@ class BookmarkController extends Controller
                 'status' => 'published',
                 'per_page' => 100
             ]);
-            
-            $allEvents = collect($eventsResponse['data'] ?? []);
+
+            // Extract events array from paginated response
+            $allEvents = collect($eventsResponse['data']['data'] ?? $eventsResponse['data'] ?? []);
             
             $categories = ['saved', 'upcoming', 'past', 'interested'];
             

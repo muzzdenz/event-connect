@@ -1,0 +1,797 @@
+<?php $__env->startSection('title', $event->title . ' - Event Connect'); ?>
+
+<?php $__env->startSection('content'); ?>
+<div class="bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Breadcrumb -->
+        <nav class="flex mb-8" aria-label="Breadcrumb">
+            <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                <li class="inline-flex items-center">
+                    <a href="<?php echo e(route('events.index')); ?>" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-primary">
+                        <i class="fas fa-home mr-2"></i>
+                        Events
+                    </a>
+                </li>
+                <li>
+                    <div class="flex items-center">
+                        <i class="fas fa-chevron-right text-gray-400 mx-2"></i>
+                        <span class="text-sm font-medium text-gray-500"><?php echo e($event->title); ?></span>
+                    </div>
+                </li>
+            </ol>
+        </nav>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Main Content -->
+            <div class="lg:col-span-2">
+                <!-- Event Header -->
+                <div class="mb-8">
+                    <!-- Category Badge -->
+<?php if($event->category): ?>
+<div class="flex items-center mb-4">
+    <div class="w-4 h-4 rounded-full mr-3" style="background-color: <?php echo e($event->category->color ?? '#3B82F6'); ?>"></div>
+    <span class="text-sm font-medium text-gray-600"><?php echo e($event->category->name ?? 'Uncategorized'); ?></span>
+</div>
+<?php endif; ?>
+
+<!-- Event Title -->
+<h1 class="text-4xl font-bold text-gray-900 mb-4"><?php echo e($event->title); ?></h1>
+
+<!-- Bookmark & Share Buttons -->
+<div class="flex items-center gap-3 mb-4">
+    <?php if(session('user')): ?>
+        <button id="bookmarkBtn" onclick="toggleBookmark(<?php echo e($event->id); ?>)" class="flex items-center px-4 py-2 rounded-lg font-medium transition-all duration-200 bg-gray-100 text-gray-700 hover:bg-gray-200" data-bookmarked="false">
+            <i class="fas fa-bookmark mr-2"></i>
+            <span id="bookmarkText">Bookmark Event</span>
+        </button>
+        <button onclick="shareEvent()" class="flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-all duration-200">
+            <i class="fas fa-share-alt mr-2"></i>Share
+        </button>
+    <?php else: ?>
+        <a href="<?php echo e(route('login')); ?>" class="flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-all duration-200">
+            <i class="fas fa-bookmark mr-2"></i>Login to Bookmark
+        </a>
+    <?php endif; ?>
+</div>
+
+                    <!-- Event Meta -->
+                    <div class="flex flex-wrap gap-6 text-sm text-gray-600 mb-6">
+                        <div class="flex items-center">
+                            <i class="fas fa-map-marker-alt mr-2 text-gray-400"></i>
+                            <span><?php echo e($event->location); ?></span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-calendar mr-2 text-gray-400"></i>
+                            <span><?php echo e($event->start_date->format('M d, Y')); ?></span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-clock mr-2 text-gray-400"></i>
+                            <span><?php echo e($event->start_date->format('H:i')); ?> - <?php echo e($event->end_date->format('H:i')); ?></span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-users mr-2 text-gray-400"></i>
+                            <span><?php echo e($event->registered_count); ?>/<?php echo e($event->quota); ?> participants</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Event Image -->
+                <?php if($event->image_url): ?>
+                    <div class="mb-8">
+                        <img src="<?php echo e($event->image_url); ?>" alt="<?php echo e($event->title); ?>" class="w-full h-64 object-cover rounded-lg shadow-lg">
+                    </div>
+                <?php endif; ?>
+
+                <!-- Event Description -->
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">About This Event</h2>
+                    <div class="prose max-w-none">
+                        <p class="text-gray-700 leading-relaxed"><?php echo e($event->description); ?></p>
+                    </div>
+                </div>
+
+                <!-- Event Details -->
+                <div class="bg-gray-50 rounded-lg p-6 mb-8">
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">Event Details</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <h4 class="font-semibold text-gray-900 mb-2">Date & Time</h4>
+                            <p class="text-gray-700"><?php echo e($event->start_date->format('l, F d, Y')); ?></p>
+                            <p class="text-gray-700"><?php echo e($event->start_date->format('g:i A')); ?> - <?php echo e($event->end_date->format('g:i A')); ?></p>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-900 mb-2">Location</h4>
+                            <p class="text-gray-700"><?php echo e($event->location); ?></p>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-900 mb-2">Capacity</h4>
+                            <p class="text-gray-700"><?php echo e($event->registered_count); ?> of <?php echo e($event->quota); ?> participants</p>
+                            <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+                                <div class="bg-primary h-2 rounded-full" style="width: <?php echo e(($event->registered_count / $event->quota) * 100); ?>%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-900 mb-2">Organizer</h4>
+<?php if($event->organizer): ?>
+    <p class="text-gray-700"><?php echo e($event->organizer->full_name ?? $event->organizer->name ?? 'Unknown'); ?></p>
+    <p class="text-sm text-gray-600"><?php echo e($event->organizer->email ?? ''); ?></p>
+<?php else: ?>
+    <p class="text-gray-700">Unknown Organizer</p>
+<?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Participation Status -->
+                <?php if(auth()->guard()->check()): ?>
+                    <?php if($isParticipating): ?>
+                        <div class="bg-green-50 border border-green-200 rounded-lg p-6 mb-8">
+                            <div class="flex items-center">
+                                <i class="fas fa-check-circle text-green-600 text-2xl mr-3"></i>
+                                <div>
+                                    <h3 class="text-lg font-semibold text-green-800">You're Registered!</h3>
+                                    <p class="text-green-700">You're successfully registered for this event.</p>
+                                    <?php if($userParticipation): ?>
+                                        <p class="text-sm text-green-600 mt-1">
+                                            Status: <span class="font-medium"><?php echo e(ucfirst($userParticipation->status)); ?></span>
+                                        </p>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+                <?php endif; ?>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="lg:col-span-1">
+                <!-- Registration Card -->
+                <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6 sticky top-8">
+                    <div class="text-center mb-6">
+                        <div class="text-3xl font-bold text-primary mb-2">
+                            <?php if($event->price > 0): ?>
+                                Rp <?php echo e(number_format($event->price)); ?>
+
+                            <?php else: ?>
+                                Free
+                            <?php endif; ?>
+                        </div>
+                        <p class="text-gray-600">per participant</p>
+                    </div>
+
+                    <!-- Availability Status -->
+                    <?php if($event->registered_count >= $event->quota): ?>
+                        <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+                            <div class="flex items-center">
+                                <i class="fas fa-exclamation-triangle text-red-600 mr-2"></i>
+                                <span class="text-red-800 font-medium">Event Full</span>
+                            </div>
+                        </div>
+                    <?php elseif($event->start_date < now()): ?>
+                        <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-4">
+                            <div class="flex items-center">
+                                <i class="fas fa-clock text-gray-600 mr-2"></i>
+                                <span class="text-gray-800 font-medium">Event Started</span>
+                            </div>
+                        </div>
+                    <?php else: ?>
+                        <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
+                            <div class="flex items-center">
+                                <i class="fas fa-check-circle text-green-600 mr-2"></i>
+                                <span class="text-green-800 font-medium">Available</span>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+
+                    <!-- Action Buttons -->
+<?php if(session('user')): ?>
+    <?php if($isParticipating ?? false): ?>
+        <!-- Already Registered -->
+        <a href="<?php echo e(route('my.participations')); ?>" class="w-full bg-green-600 text-white py-3 rounded-lg font-medium hover:bg-green-700 transition-colors duration-200 mb-3 inline-block text-center">
+            <i class="fas fa-check-circle mr-2"></i>View My QR Code
+        </a>
+    <?php elseif($event->quota > 0 && $event->registered_count >= $event->quota): ?>
+        <button class="w-full bg-gray-400 text-white py-3 rounded-lg font-medium mb-3" disabled>
+            <i class="fas fa-times mr-2"></i>Event Full
+        </button>
+    <?php elseif($event->start_date < now()): ?>
+        <button class="w-full bg-gray-400 text-white py-3 rounded-lg font-medium mb-3" disabled>
+            <i class="fas fa-clock mr-2"></i>Event Started
+        </button>
+    <?php else: ?>
+        <!-- Join Event Form -->
+        <form action="<?php echo e(route('events.register', $event->id)); ?>" method="POST" id="joinEventForm" onsubmit="handleJoinSubmit(event)">
+            <?php echo csrf_field(); ?>
+            <button type="submit" id="joinEventBtn" class="w-full bg-red-600 text-white py-3 rounded-lg font-medium hover:bg-red-700 transition-colors duration-200 mb-3 disabled:bg-gray-400 disabled:cursor-not-allowed">
+                <span id="joinBtnText">
+                    <i class="fas fa-plus mr-2"></i>Join Event Now
+                </span>
+                <span id="joinBtnLoading" class="hidden">
+                    <i class="fas fa-spinner fa-spin mr-2"></i>Joining...
+                </span>
+            </button>
+        </form>
+    <?php endif; ?>
+<?php else: ?>
+    <a href="<?php echo e(route('login')); ?>" class="w-full bg-red-600 text-white py-3 rounded-lg font-medium hover:bg-red-700 transition-colors duration-200 mb-3 inline-block text-center">
+        <i class="fas fa-sign-in-alt mr-2"></i>Login to Join
+    </a>
+<?php endif; ?>
+
+<a href="<?php echo e(route('events.index')); ?>" class="w-full bg-gray-100 text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-200 transition-colors duration-200 inline-block text-center">
+    <i class="fas fa-arrow-left mr-2"></i>Back to Events
+</a>
+                </div>
+
+                <!-- Organizer Info -->
+<div class="bg-white border border-gray-200 rounded-lg p-6 mb-6">
+    <h3 class="text-lg font-semibold text-gray-900 mb-4">Organizer</h3>
+    <?php if($event->organizer): ?>
+        <div class="flex items-center">
+            <div class="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center text-white font-bold text-lg mr-4">
+                <?php echo e(strtoupper(substr($event->organizer->name ?? $event->organizer->full_name ?? 'O', 0, 1))); ?>
+
+            </div>
+            <div>
+                <h4 class="font-semibold text-gray-900"><?php echo e($event->organizer->full_name ?? $event->organizer->name ?? 'Unknown'); ?></h4>
+                <p class="text-sm text-gray-600"><?php echo e($event->organizer->email ?? ''); ?></p>
+                <?php if(isset($event->organizer->bio) && $event->organizer->bio): ?>
+                    <p class="text-sm text-gray-700 mt-2"><?php echo e(Str::limit($event->organizer->bio, 100)); ?></p>
+                <?php endif; ?>
+            </div>
+        </div>
+    <?php else: ?>
+        <p class="text-gray-600">No organizer information available</p>
+    <?php endif; ?>
+</div>
+                    </div>
+                </div>
+
+                <!-- Share Event -->
+                <div class="bg-white border border-gray-200 rounded-lg p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Share This Event</h3>
+                    <div class="flex space-x-3">
+                        <button class="flex-1 bg-blue-600 text-white py-2 px-3 rounded-md hover:bg-blue-700 transition-colors duration-200">
+                            <i class="fab fa-facebook mr-1"></i>Facebook
+                        </button>
+                        <button class="flex-1 bg-blue-400 text-white py-2 px-3 rounded-md hover:bg-blue-500 transition-colors duration-200">
+                            <i class="fab fa-twitter mr-1"></i>Twitter
+                        </button>
+                        <button class="flex-1 bg-green-600 text-white py-2 px-3 rounded-md hover:bg-green-700 transition-colors duration-200">
+                            <i class="fab fa-whatsapp mr-1"></i>WhatsApp
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Payment Method Modal -->
+<div id="paymentModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div class="mt-3">
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-medium text-gray-900">Choose Payment Method</h3>
+                <button onclick="hidePaymentModal()" class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <!-- Event Info -->
+            <div class="bg-gray-50 rounded-lg p-4 mb-4">
+                <h4 class="font-semibold text-gray-900"><?php echo e($event->title); ?></h4>
+                <p class="text-sm text-gray-600"><?php echo e($event->start_date->format('M d, Y H:i')); ?></p>
+                <p class="text-lg font-bold text-primary">Rp <?php echo e(number_format($event->price)); ?></p>
+            </div>
+
+            <!-- Payment Methods -->
+            <div class="space-y-3">
+                <!-- Invoice Payment -->
+                <button onclick="createPayment('invoice')" class="w-full flex items-center p-4 border border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-colors">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-credit-card text-2xl text-blue-600"></i>
+                    </div>
+                    <div class="ml-4 text-left">
+                        <h5 class="font-medium text-gray-900">Credit Card</h5>
+                        <p class="text-sm text-gray-600">Visa, Mastercard, JCB</p>
+                    </div>
+                </button>
+
+                <!-- Virtual Account -->
+                <button onclick="showBankSelection()" class="w-full flex items-center p-4 border border-gray-200 rounded-lg hover:border-green-500 hover:bg-green-50 transition-colors">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-university text-2xl text-green-600"></i>
+                    </div>
+                    <div class="ml-4 text-left">
+                        <h5 class="font-medium text-gray-900">Virtual Account</h5>
+                        <p class="text-sm text-gray-600">BCA, BNI, BRI, Mandiri</p>
+                    </div>
+                </button>
+
+                <!-- E-Wallet -->
+                <button onclick="showEWalletSelection()" class="w-full flex items-center p-4 border border-gray-200 rounded-lg hover:border-purple-500 hover:bg-purple-50 transition-colors">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-mobile-alt text-2xl text-purple-600"></i>
+                    </div>
+                    <div class="ml-4 text-left">
+                        <h5 class="font-medium text-gray-900">E-Wallet</h5>
+                        <p class="text-sm text-gray-600">OVO, DANA, LinkAja, ShopeePay</p>
+                    </div>
+                </button>
+            </div>
+
+            <!-- Loading State -->
+            <div id="paymentLoading" class="hidden text-center py-4">
+                <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                <p class="text-sm text-gray-600 mt-2">Processing payment...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bank Selection Modal -->
+<div id="bankModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div class="mt-3">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-medium text-gray-900">Select Bank</h3>
+                <button onclick="hideBankModal()" class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="space-y-3">
+                <button onclick="createPayment('virtual_account', 'BCA')" class="w-full flex items-center p-4 border border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-colors">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-university text-2xl text-blue-600"></i>
+                    </div>
+                    <div class="ml-4 text-left">
+                        <h5 class="font-medium text-gray-900">BCA</h5>
+                        <p class="text-sm text-gray-600">Bank Central Asia</p>
+                    </div>
+                </button>
+
+                <button onclick="createPayment('virtual_account', 'BNI')" class="w-full flex items-center p-4 border border-gray-200 rounded-lg hover:border-red-500 hover:bg-red-50 transition-colors">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-university text-2xl text-red-600"></i>
+                    </div>
+                    <div class="ml-4 text-left">
+                        <h5 class="font-medium text-gray-900">BNI</h5>
+                        <p class="text-sm text-gray-600">Bank Negara Indonesia</p>
+                    </div>
+                </button>
+
+                <button onclick="createPayment('virtual_account', 'BRI')" class="w-full flex items-center p-4 border border-gray-200 rounded-lg hover:border-green-500 hover:bg-green-50 transition-colors">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-university text-2xl text-green-600"></i>
+                    </div>
+                    <div class="ml-4 text-left">
+                        <h5 class="font-medium text-gray-900">BRI</h5>
+                        <p class="text-sm text-gray-600">Bank Rakyat Indonesia</p>
+                    </div>
+                </button>
+
+                <button onclick="createPayment('virtual_account', 'MANDIRI')" class="w-full flex items-center p-4 border border-gray-200 rounded-lg hover:border-yellow-500 hover:bg-yellow-50 transition-colors">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-university text-2xl text-yellow-600"></i>
+                    </div>
+                    <div class="ml-4 text-left">
+                        <h5 class="font-medium text-gray-900">Mandiri</h5>
+                        <p class="text-sm text-gray-600">Bank Mandiri</p>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- E-Wallet Selection Modal -->
+<div id="ewalletModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div class="mt-3">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-medium text-gray-900">Select E-Wallet</h3>
+                <button onclick="hideEWalletModal()" class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="space-y-3">
+                <button onclick="createPayment('ewallet', 'OVO')" class="w-full flex items-center p-4 border border-gray-200 rounded-lg hover:border-purple-500 hover:bg-purple-50 transition-colors">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-mobile-alt text-2xl text-purple-600"></i>
+                    </div>
+                    <div class="ml-4 text-left">
+                        <h5 class="font-medium text-gray-900">OVO</h5>
+                        <p class="text-sm text-gray-600">Digital Wallet</p>
+                    </div>
+                </button>
+
+                <button onclick="createPayment('ewallet', 'DANA')" class="w-full flex items-center p-4 border border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-colors">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-mobile-alt text-2xl text-blue-600"></i>
+                    </div>
+                    <div class="ml-4 text-left">
+                        <h5 class="font-medium text-gray-900">DANA</h5>
+                        <p class="text-sm text-gray-600">Digital Wallet</p>
+                    </div>
+                </button>
+
+                <button onclick="createPayment('ewallet', 'LINKAJA')" class="w-full flex items-center p-4 border border-gray-200 rounded-lg hover:border-green-500 hover:bg-green-50 transition-colors">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-mobile-alt text-2xl text-green-600"></i>
+                    </div>
+                    <div class="ml-4 text-left">
+                        <h5 class="font-medium text-gray-900">LinkAja</h5>
+                        <p class="text-sm text-gray-600">Digital Wallet</p>
+                    </div>
+                </button>
+
+                <button onclick="createPayment('ewallet', 'SHOPEEPAY')" class="w-full flex items-center p-4 border border-gray-200 rounded-lg hover:border-orange-500 hover:bg-orange-50 transition-colors">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-mobile-alt text-2xl text-orange-600"></i>
+                    </div>
+                    <div class="ml-4 text-left">
+                        <h5 class="font-medium text-gray-900">ShopeePay</h5>
+                        <p class="text-sm text-gray-600">Digital Wallet</p>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('scripts'); ?>
+<script>
+    // Get CSRF token
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    
+    // Get access token from localStorage or session
+    const accessToken = localStorage.getItem('access_token') || '<?php echo e(auth()->user() ? auth()->user()->createToken("web")->plainTextToken : ""); ?>';
+
+    function joinEvent() {
+        if (confirm('Are you sure you want to join this event?')) {
+            // Join free event
+            fetch('/api/participants/join/<?php echo e($event->id); ?>', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'Authorization': 'Bearer ' + accessToken,
+                    'X-CSRF-TOKEN': csrfToken
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Successfully joined the event!');
+                    location.reload();
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while joining the event.');
+            });
+        }
+    }
+
+    function showPaymentModal() {
+        document.getElementById('paymentModal').classList.remove('hidden');
+    }
+
+    function hidePaymentModal() {
+        document.getElementById('paymentModal').classList.add('hidden');
+    }
+
+    function showBankSelection() {
+        hidePaymentModal();
+        document.getElementById('bankModal').classList.remove('hidden');
+    }
+
+    function hideBankModal() {
+        document.getElementById('bankModal').classList.add('hidden');
+        showPaymentModal();
+    }
+
+    function showEWalletSelection() {
+        hidePaymentModal();
+        document.getElementById('ewalletModal').classList.remove('hidden');
+    }
+
+    function hideEWalletModal() {
+        document.getElementById('ewalletModal').classList.add('hidden');
+        showPaymentModal();
+    }
+
+    function createPayment(paymentMethod, provider = null) {
+        // Show loading
+        document.getElementById('paymentLoading').classList.remove('hidden');
+        
+        // Hide all modals
+        hidePaymentModal();
+        hideBankModal();
+        hideEWalletModal();
+
+        // Prepare payment data
+        const paymentData = {
+            event_id: <?php echo e($event->id); ?>,
+            payment_method: paymentMethod
+        };
+
+        if (paymentMethod === 'virtual_account' && provider) {
+            paymentData.bank_code = provider;
+        } else if (paymentMethod === 'ewallet' && provider) {
+            paymentData.ewallet_type = provider;
+        }
+
+        // Create payment
+        fetch('/api/payments/create', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': 'Bearer ' + accessToken,
+                'X-CSRF-TOKEN': csrfToken
+            },
+            body: JSON.stringify(paymentData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('paymentLoading').classList.add('hidden');
+            
+            if (data.success) {
+                // Redirect to payment URL
+                if (data.data.payment_url) {
+                    // Direct redirect to Xendit payment page
+                    window.location.href = data.data.payment_url;
+                } else {
+                    // If no payment URL (free event), show success and reload
+                    alert('Payment created successfully!');
+                    location.reload();
+                }
+            } else {
+                // Show detailed error message but don't prevent retry
+                let errorMessage = 'Error: ' + data.message;
+                if (data.errors) {
+                    errorMessage += '\n\nDetails:';
+                    for (const [field, errors] of Object.entries(data.errors)) {
+                        errorMessage += '\n• ' + field + ': ' + errors.join(', ');
+                    }
+                }
+                
+                // If payment URL exists in error response, still redirect
+                if (data.data && data.data.payment_url) {
+                    console.warn('Error but payment URL exists, redirecting:', errorMessage);
+                    window.location.href = data.data.payment_url;
+                } else {
+                    alert(errorMessage);
+                }
+            }
+        })
+        .catch(error => {
+            document.getElementById('paymentLoading').classList.add('hidden');
+            console.error('Error:', error);
+            
+            // Try to get payment URL from error response if available
+            if (error.response && error.response.data && error.response.data.payment_url) {
+                console.warn('Error but payment URL exists, redirecting:', error.response.data.payment_url);
+                window.location.href = error.response.data.payment_url;
+            } else {
+                alert('An error occurred while creating payment. Please try again.');
+            }
+        });
+    }
+
+    // Share functionality
+    document.querySelectorAll('button').forEach(button => {
+        if (button.textContent.includes('Facebook') || button.textContent.includes('Twitter') || button.textContent.includes('WhatsApp')) {
+            button.addEventListener('click', function() {
+                const url = window.location.href;
+                const title = '<?php echo e($event->title); ?>';
+                
+                if (this.textContent.includes('Facebook')) {
+                    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank');
+                } else if (this.textContent.includes('Twitter')) {
+                    window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`, '_blank');
+                } else if (this.textContent.includes('WhatsApp')) {
+                    window.open(`https://wa.me/?text=${encodeURIComponent(title + ' - ' + url)}`, '_blank');
+                }
+            });
+        }
+    });
+
+    // Close modals when clicking outside
+    document.addEventListener('click', function(event) {
+        if (event.target.classList.contains('fixed')) {
+            hidePaymentModal();
+            hideBankModal();
+            hideEWalletModal();
+        }
+    });
+</script>
+
+<!-- Bookmark JavaScript -->
+<script>
+    // Bookmark Manager dengan localStorage
+    const BookmarkManager = {
+        STORAGE_KEY: 'event_bookmarks',
+        
+        getBookmarks() {
+            const bookmarks = localStorage.getItem(this.STORAGE_KEY);
+            return bookmarks ? JSON.parse(bookmarks) : [];
+        },
+        
+        saveBookmarks(bookmarks) {
+            localStorage.setItem(this.STORAGE_KEY, JSON.stringify(bookmarks));
+        },
+        
+        addBookmark(eventId) {
+            const bookmarks = this.getBookmarks();
+            if (!bookmarks.includes(eventId)) {
+                bookmarks.push(eventId);
+                this.saveBookmarks(bookmarks);
+                return true;
+            }
+            return false;
+        },
+        
+        removeBookmark(eventId) {
+            const bookmarks = this.getBookmarks();
+            const filtered = bookmarks.filter(id => id !== eventId);
+            this.saveBookmarks(filtered);
+            return true;
+        },
+        
+        isBookmarked(eventId) {
+            return this.getBookmarks().includes(eventId);
+        }
+    };
+
+    function toggleBookmark(eventId) {
+        console.log('Detail bookmark clicked!', eventId);
+        const btn = document.getElementById('bookmarkBtn');
+        const text = document.getElementById('bookmarkText');
+        const isBookmarked = BookmarkManager.isBookmarked(eventId);
+
+        try {
+            if (isBookmarked) {
+                // Remove bookmark
+                BookmarkManager.removeBookmark(eventId);
+                btn.classList.remove('bg-red-600', 'text-white');
+                btn.classList.add('bg-gray-100', 'text-gray-700', 'hover:bg-gray-200');
+                text.textContent = 'Bookmark Event';
+                btn.dataset.bookmarked = 'false';
+                showToast('Bookmark removed', 'info');
+            } else {
+                // Add bookmark
+                BookmarkManager.addBookmark(eventId);
+                btn.classList.remove('bg-gray-100', 'text-gray-700', 'hover:bg-gray-200');
+                btn.classList.add('bg-red-600', 'text-white');
+                text.textContent = 'Bookmarked';
+                btn.dataset.bookmarked = 'true';
+                showToast('Event bookmarked successfully! 🎉', 'success');
+            }
+        } catch (error) {
+            console.error('Bookmark toggle error:', error);
+            showToast('Failed to toggle bookmark', 'error');
+        }
+    }
+
+    // Check bookmark status on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Initializing detail bookmark...');
+        const eventId = <?php echo e($event->id); ?>;
+        const btn = document.getElementById('bookmarkBtn');
+        const text = document.getElementById('bookmarkText');
+        
+        if (BookmarkManager.isBookmarked(eventId)) {
+            btn.classList.remove('bg-gray-100', 'text-gray-700', 'hover:bg-gray-200');
+            btn.classList.add('bg-red-600', 'text-white');
+            text.textContent = 'Bookmarked';
+            btn.dataset.bookmarked = 'true';
+        }
+    });
+
+    function shareEvent() {
+        const url = window.location.href;
+        const title = "<?php echo e($event->title); ?>";
+        
+        if (navigator.share) {
+            navigator.share({
+                title: title,
+                url: url
+            }).catch(err => console.log('Error sharing:', err));
+        } else {
+            // Fallback: copy to clipboard
+            navigator.clipboard.writeText(url).then(() => {
+                showToast('Link copied to clipboard!', 'success');
+            });
+        }
+    }
+
+    function showToast(message, type = 'success') {
+        const toast = document.createElement('div');
+        toast.className = `fixed top-4 right-4 px-6 py-3 rounded-lg text-white shadow-lg z-50 animate-slide-in ${
+            type === 'success' ? 'bg-green-600' : 
+            type === 'error' ? 'bg-red-600' : 
+            'bg-blue-600'
+        }`;
+        toast.innerHTML = `
+            <div class="flex items-center">
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'} mr-2"></i>
+                <span>${message}</span>
+            </div>
+        `;
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+            toast.style.transition = 'opacity 0.3s, transform 0.3s';
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateX(100%)';
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
+
+    // Handle join event form submission
+    function handleJoinSubmit(event) {
+        const btn = document.getElementById('joinEventBtn');
+        const btnText = document.getElementById('joinBtnText');
+        const btnLoading = document.getElementById('joinBtnLoading');
+        
+        // Disable button and show loading
+        btn.disabled = true;
+        btnText.classList.add('hidden');
+        btnLoading.classList.remove('hidden');
+        
+        // Form will submit normally, button state will reset on page reload
+        return true;
+    }
+</script>
+
+<?php if(session('success')): ?>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        showNotification('✓ Success!', '<?php echo e(session('success')); ?>', 'success');
+    });
+</script>
+<?php endif; ?>
+
+<?php if(session('error')): ?>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        showNotification('✗ Error', '<?php echo e(session('error')); ?>', 'error');
+    });
+</script>
+<?php endif; ?>
+
+<?php if(session('info')): ?>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        showNotification('ℹ Info', '<?php echo e(session('info')); ?>', 'info');
+    });
+</script>
+<?php endif; ?>
+
+<style>
+    @keyframes slide-in {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    .animate-slide-in {
+        animation: slide-in 0.3s ease-out;
+    }
+</style>
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('participant.layout', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Study\Kuliah\Semester-7\CP\event-connect\resources\views/participant/events/show.blade.php ENDPATH**/ ?>

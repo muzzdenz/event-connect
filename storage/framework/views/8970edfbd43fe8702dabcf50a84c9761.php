@@ -1,12 +1,10 @@
-@extends('participant.layout')
+<?php $__env->startSection('title', 'Browse Events - Event Connect'); ?>
 
-@section('title', 'Browse Events - Event Connect')
-
-@push('head-scripts')
+<?php $__env->startPush('head-scripts'); ?>
 <!-- Removed old localStorage-based bookmark code - now using API-based bookmarks -->
-@endpush
+<?php $__env->stopPush(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="bg-white">
     <!-- Hero Section (Dark Red) -->
     <div class="bg-red-800 h-32 w-full flex items-center justify-center">
@@ -19,7 +17,7 @@
 
         <!-- Search and Filter Section -->
         <div class="mb-8" id="filterSection">
-            <form method="GET" action="{{ route('events.index') }}" id="searchForm">
+            <form method="GET" action="<?php echo e(route('events.index')); ?>" id="searchForm">
                 <!-- Search Bar - 2 Input Horizontal with Category Filter -->
                 <div class="flex gap-4 items-end">
                     <!-- Search Event Name -->
@@ -27,7 +25,7 @@
                         <label class="block text-sm font-medium text-gray-700 mb-2">Search Event</label>
                         <input type="text" 
                                name="search" 
-                               value="{{ $currentSearch ?? '' }}"
+                               value="<?php echo e($currentSearch ?? ''); ?>"
                                placeholder="Search by event name..."
                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent">
                     </div>
@@ -39,12 +37,13 @@
                                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
                                 onchange="this.form.submit()">
                             <option value="">All Categories</option>
-                            @foreach($categories as $category)
-                                <option value="{{ $category->id }}" 
-                                        {{ ($currentCategory ?? '') == $category->id ? 'selected' : '' }}>
-                                    {{ $category->name }}
+                            <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <option value="<?php echo e($category->id); ?>" 
+                                        <?php echo e(($currentCategory ?? '') == $category->id ? 'selected' : ''); ?>>
+                                    <?php echo e($category->name); ?>
+
                                 </option>
-                            @endforeach
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </select>
                     </div>
                     
@@ -58,38 +57,39 @@
                     </div>
                     
                     <!-- Clear Filters Button -->
-                    @if($currentSearch || $currentCategory)
+                    <?php if($currentSearch || $currentCategory): ?>
                     <div>
-                        <a href="{{ route('events.index') }}" 
+                        <a href="<?php echo e(route('events.index')); ?>" 
                            class="bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300 flex items-center gap-2 transition-colors">
                             <i class="fas fa-times"></i>
                             <span>Clear</span>
                         </a>
                     </div>
-                    @endif
+                    <?php endif; ?>
                 </div>
                 
                 <!-- Active Filters Info -->
-                @if($currentSearch || $currentCategory)
+                <?php if($currentSearch || $currentCategory): ?>
                 <div class="mt-4 flex items-center gap-2 text-sm text-gray-600">
                     <span class="font-medium">Active filters:</span>
-                    @if($currentSearch)
+                    <?php if($currentSearch): ?>
                         <span class="bg-red-100 text-red-700 px-3 py-1 rounded-full">
-                            Search: "{{ $currentSearch }}"
+                            Search: "<?php echo e($currentSearch); ?>"
                         </span>
-                    @endif
-                    @if($currentCategory)
-                        @php
+                    <?php endif; ?>
+                    <?php if($currentCategory): ?>
+                        <?php
                             $selectedCategory = $categories->firstWhere('id', $currentCategory);
-                        @endphp
-                        @if($selectedCategory)
+                        ?>
+                        <?php if($selectedCategory): ?>
                             <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full">
-                                Category: {{ $selectedCategory->name }}
+                                Category: <?php echo e($selectedCategory->name); ?>
+
                             </span>
-                        @endif
-                    @endif
+                        <?php endif; ?>
+                    <?php endif; ?>
                 </div>
-                @endif
+                <?php endif; ?>
             </form>
         </div>
 
@@ -97,16 +97,16 @@
         <div class="mb-8">
             <h2 class="text-xl font-bold text-gray-900 mb-4">Browse by Category</h2>
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-                <a href="{{ route('events.index') }}" 
-                   class="px-4 py-3 rounded-lg text-center transition-all {{ !$currentCategory ? 'bg-red-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
+                <a href="<?php echo e(route('events.index')); ?>" 
+                   class="px-4 py-3 rounded-lg text-center transition-all <?php echo e(!$currentCategory ? 'bg-red-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'); ?>">
                     <div class="font-medium">All Events</div>
                 </a>
-                @foreach($categories as $category)
-                    <a href="{{ route('events.index', ['category_id' => $category->id]) }}" 
-                       class="px-4 py-3 rounded-lg text-center transition-all {{ ($currentCategory ?? '') == $category->id ? 'bg-red-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
-                        <div class="font-medium text-sm">{{ $category->name }}</div>
+                <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <a href="<?php echo e(route('events.index', ['category_id' => $category->id])); ?>" 
+                       class="px-4 py-3 rounded-lg text-center transition-all <?php echo e(($currentCategory ?? '') == $category->id ? 'bg-red-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'); ?>">
+                        <div class="font-medium text-sm"><?php echo e($category->name); ?></div>
                     </a>
-                @endforeach
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </div>
         </div>
 
@@ -114,162 +114,165 @@
 <div class="mb-8">
     <div class="flex justify-between items-center mb-4">
         <h2 class="text-2xl font-bold text-gray-900">
-            @if($currentSearch || $currentCategory)
+            <?php if($currentSearch || $currentCategory): ?>
                 Search Results
-            @else
+            <?php else: ?>
                 All Events
-            @endif
-            <span class="text-gray-500 text-lg ml-2">({{ $events->count() }} events)</span>
+            <?php endif; ?>
+            <span class="text-gray-500 text-lg ml-2">(<?php echo e($events->count()); ?> events)</span>
         </h2>
     </div>
     
-    @if(isset($error))
+    <?php if(isset($error)): ?>
         <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
-            <p>{{ $error }}</p>
+            <p><?php echo e($error); ?></p>
         </div>
-    @endif
+    <?php endif; ?>
     
-    @if($events->count() > 0)
+    <?php if($events->count() > 0): ?>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            @foreach($events as $event)
+            <?php $__currentLoopData = $events; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $event): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                 <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300">
                     <!-- Event Image -->
                     <div class="relative h-48 bg-gray-300">
-                        @if($event->image_url)
-                            <img src="{{ $event->image_url }}" alt="{{ $event->title }}" class="w-full h-full object-cover">
-                        @else
+                        <?php if($event->image_url): ?>
+                            <img src="<?php echo e($event->image_url); ?>" alt="<?php echo e($event->title); ?>" class="w-full h-full object-cover">
+                        <?php else: ?>
                             <div class="w-full h-full bg-gradient-to-br from-red-500 to-pink-500 flex items-center justify-center">
                                 <i class="fas fa-calendar-alt text-white text-6xl opacity-30"></i>
                             </div>
-                        @endif
+                        <?php endif; ?>
                         
                         <!-- Category Badge -->
-                        @if($event->category)
+                        <?php if($event->category): ?>
                             <div class="absolute top-3 left-3">
                                 <span class="bg-red-600 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-lg">
-                                    {{ $event->category->name }}
+                                    <?php echo e($event->category->name); ?>
+
                                 </span>
                             </div>
-                        @endif
+                        <?php endif; ?>
                         
                         <!-- Price Badge -->
                         <div class="absolute bottom-3 right-3">
-                            @if($event->price > 0)
+                            <?php if($event->price > 0): ?>
                                 <span class="bg-yellow-400 text-gray-900 text-sm font-bold px-3 py-1 rounded-full shadow-lg">
-                                    Rp {{ number_format($event->price, 0, ',', '.') }}
+                                    Rp <?php echo e(number_format($event->price, 0, ',', '.')); ?>
+
                                 </span>
-                            @else
+                            <?php else: ?>
                                 <span class="bg-green-500 text-white text-sm font-bold px-3 py-1 rounded-full shadow-lg">
                                     FREE
                                 </span>
-                            @endif
+                            <?php endif; ?>
                         </div>
                         
                         <!-- Bookmark Button -->
-                        @if(session('user'))
+                        <?php if(session('user')): ?>
                             <button 
-                                onclick="toggleBookmarkCard({{ $event->id }}, this, event)"
+                                onclick="toggleBookmarkCard(<?php echo e($event->id); ?>, this, event)"
                                 class="bookmark-btn-card absolute top-3 right-3 w-10 h-10 rounded-full shadow-lg transition-all duration-200 flex items-center justify-center bg-white text-gray-700 hover:bg-gray-100"
-                                data-event-id="{{ $event->id }}"
+                                data-event-id="<?php echo e($event->id); ?>"
                                 data-bookmarked="false"
                                 title="Bookmark this event"
                             >
                                 <i class="fas fa-bookmark"></i>
                             </button>
-                        @endif
+                        <?php endif; ?>
                     </div>
                     
                     <!-- Event Details -->
                     <div class="p-5">
                         <h3 class="font-bold text-lg text-gray-900 mb-3 line-clamp-2 hover:text-red-600 transition-colors">
-                            <a href="{{ route('events.show', $event->id) }}">
-                                {{ $event->title }}
+                            <a href="<?php echo e(route('events.show', $event->id)); ?>">
+                                <?php echo e($event->title); ?>
+
                             </a>
                         </h3>
                         
                         <div class="space-y-2 text-sm text-gray-600 mb-4">
                             <div class="flex items-center">
                                 <i class="fas fa-calendar-alt w-5 text-red-500"></i>
-                                <span>{{ $event->start_date->format('D, M d, Y') }}</span>
+                                <span><?php echo e($event->start_date->format('D, M d, Y')); ?></span>
                             </div>
                             <div class="flex items-center">
                                 <i class="fas fa-clock w-5 text-red-500"></i>
-                                <span>{{ $event->start_date->format('H:i') }}</span>
+                                <span><?php echo e($event->start_date->format('H:i')); ?></span>
                             </div>
                             <div class="flex items-center">
                                 <i class="fas fa-map-marker-alt w-5 text-red-500"></i>
-                                <span class="line-clamp-1">{{ $event->location }}</span>
+                                <span class="line-clamp-1"><?php echo e($event->location); ?></span>
                             </div>
                             <div class="flex items-center">
                                 <i class="fas fa-users w-5 text-red-500"></i>
-                                <span>{{ $event->registered_count ?? 0 }} / {{ $event->quota ?? 0 }} participants</span>
+                                <span><?php echo e($event->registered_count ?? 0); ?> / <?php echo e($event->quota ?? 0); ?> participants</span>
                             </div>
                         </div>
                         
-                        <a href="{{ route('events.show', $event->id) }}" 
+                        <a href="<?php echo e(route('events.show', $event->id)); ?>" 
                            class="block w-full text-center bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition-colors font-medium">
                             View Details
                         </a>
                     </div>
                 </div>
-            @endforeach
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         </div>
-    @else
+    <?php else: ?>
         <!-- No Results -->
         <div class="text-center py-16">
             <div class="max-w-md mx-auto">
                 <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                    @if(request('search') || request('category'))
+                    <?php if(request('search') || request('category')): ?>
                         <i class="fas fa-search text-5xl text-gray-400"></i>
-                    @else
+                    <?php else: ?>
                         <i class="fas fa-calendar-times text-5xl text-gray-400"></i>
-                    @endif
+                    <?php endif; ?>
                 </div>
                 
-                @if(request('search') || request('category'))
+                <?php if(request('search') || request('category')): ?>
                     <h3 class="text-2xl font-bold text-gray-900 mb-2">No Events Match Your Search</h3>
-                    <p class="text-gray-600 mb-6">We couldn't find any events matching "{{ request('search') }}"
-                        @if(request('category')) in {{ $categories->firstWhere('id', request('category'))->name ?? 'this category' }} @endif
+                    <p class="text-gray-600 mb-6">We couldn't find any events matching "<?php echo e(request('search')); ?>"
+                        <?php if(request('category')): ?> in <?php echo e($categories->firstWhere('id', request('category'))->name ?? 'this category'); ?> <?php endif; ?>
                     </p>
                     <div class="flex flex-col sm:flex-row gap-3 justify-center">
-                        <a href="{{ route('events.index') }}" class="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors font-medium">
+                        <a href="<?php echo e(route('events.index')); ?>" class="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors font-medium">
                             <i class="fas fa-times mr-2"></i>Clear Filters
                         </a>
                         <button onclick="history.back()" class="border border-gray-300 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-50 transition-colors font-medium">
                             <i class="fas fa-arrow-left mr-2"></i>Go Back
                         </button>
                     </div>
-                @else
+                <?php else: ?>
                     <h3 class="text-2xl font-bold text-gray-900 mb-2">No Events Available Yet</h3>
                     <p class="text-gray-600 mb-6">There are currently no published events. Check back soon!</p>
                     
                     <!-- Info Box for Organizers -->
-                    @if(session('user') && (session('user')['role'] === 'admin' || session('user')['role'] === 'organizer'))
+                    <?php if(session('user') && (session('user')['role'] === 'admin' || session('user')['role'] === 'organizer')): ?>
                         <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6 text-left">
                             <h4 class="font-semibold text-blue-900 mb-2 flex items-center">
                                 <i class="fas fa-lightbulb mr-2"></i>
                                 You can create events!
                             </h4>
                             <p class="text-sm text-blue-800 mb-4">As an organizer, you can create and publish events for the community.</p>
-                            <a href="{{ route('admin.events') }}" class="inline-flex items-center text-sm font-medium text-blue-700 hover:text-blue-900">
+                            <a href="<?php echo e(route('admin.events')); ?>" class="inline-flex items-center text-sm font-medium text-blue-700 hover:text-blue-900">
                                 Go to Admin Dashboard <i class="fas fa-arrow-right ml-2"></i>
                             </a>
                         </div>
-                    @endif
+                    <?php endif; ?>
                     
-                    <a href="{{ route('home') }}" class="inline-block bg-red-600 text-white px-8 py-3 rounded-lg hover:bg-red-700 transition-colors font-medium shadow-md">
+                    <a href="<?php echo e(route('home')); ?>" class="inline-block bg-red-600 text-white px-8 py-3 rounded-lg hover:bg-red-700 transition-colors font-medium shadow-md">
                         <i class="fas fa-home mr-2"></i>Back to Home
                     </a>
-                @endif
+                <?php endif; ?>
             </div>
         </div>
-    @endif
+    <?php endif; ?>
 </div>
     </div>
 </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@section('scripts')
+<?php $__env->startSection('scripts'); ?>
 <style>
     .scrollbar-hide::-webkit-scrollbar {
         display: none;
@@ -530,8 +533,10 @@
     });
 </script>
 
-@endsection
+<?php $__env->stopSection(); ?>
 
 
 
 
+
+<?php echo $__env->make('participant.layout', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Study\Kuliah\Semester-7\CP\event-connect\resources\views/participant/events/index.blade.php ENDPATH**/ ?>

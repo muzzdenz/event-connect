@@ -1,5 +1,7 @@
 # Backend API Configuration
 
+> **⚠️ IMPORTANT**: This is a **frontend-only** application. All business logic, database operations, and API endpoints are handled by the backend API server.
+
 ## Quick Start
 
 1. **Jalankan Backend API** di port yang berbeda (misalnya port 8001):

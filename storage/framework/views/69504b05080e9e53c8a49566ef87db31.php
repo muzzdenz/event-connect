@@ -1,8 +1,6 @@
-@extends('participant.layout')
+<?php $__env->startSection('title', 'Home - Event Connect'); ?>
 
-@section('title', 'Home - Event Connect')
-
-@push('head-scripts')
+<?php $__env->startPush('head-scripts'); ?>
 <!-- API-based bookmark system -->
 <script>
 // Toast notification function
@@ -151,9 +149,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
 console.log('✅ Bookmark script loaded!');
 </script>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="bg-gray-50">
     <!-- Hero Section with Search -->
     <div class="relative h-[400px] sm:h-[500px] w-full flex items-center justify-center bg-cover bg-center overflow-hidden" style="background-image: url('https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80');">
@@ -164,7 +162,7 @@ console.log('✅ Bookmark script loaded!');
 
             <!-- Search Bar -->
             <div class="max-w-2xl mx-auto">
-                <form action="{{ route('events.index') }}" method="GET" class="flex flex-col sm:flex-row gap-2">
+                <form action="<?php echo e(route('events.index')); ?>" method="GET" class="flex flex-col sm:flex-row gap-2">
                     <div class="flex-1 relative">
                         <input type="text" name="search" placeholder="Search events..."
                             class="w-full px-4 sm:px-6 py-3 sm:py-4 rounded-full text-gray-900 focus:outline-none focus:ring-4 focus:ring-white/30 shadow-xl">
@@ -179,7 +177,7 @@ console.log('✅ Bookmark script loaded!');
     </div>
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        @if($events->count() > 0)
+        <?php if($events->count() > 0): ?>
         
         <!-- Event Recommendation Section -->
         <div class="mb-12">
@@ -188,7 +186,7 @@ console.log('✅ Bookmark script loaded!');
                     <h2 class="text-2xl sm:text-3xl font-bold text-gray-900">Featured Events</h2>
                     <p class="text-sm sm:text-base text-gray-600 mt-1">Handpicked events just for you</p>
                 </div>
-                <a href="{{ route('events.index') }}" class="text-red-600 hover:text-red-700 font-semibold flex items-center gap-1 sm:gap-2 text-sm sm:text-base">
+                <a href="<?php echo e(route('events.index')); ?>" class="text-red-600 hover:text-red-700 font-semibold flex items-center gap-1 sm:gap-2 text-sm sm:text-base">
                     View All <i class="fas fa-arrow-right text-xs sm:text-sm"></i>
                 </a>
             </div>
@@ -196,73 +194,76 @@ console.log('✅ Bookmark script loaded!');
             <div class="relative">
                 <div class="px-0 sm:px-14">
                     <div id="recommendationScroll" class="flex overflow-x-auto gap-4 sm:gap-6 pb-4 scrollbar-hide snap-x snap-mandatory" style="scrollbar-width: none; -ms-overflow-style: none;">
-                        @foreach($events->take(6) as $event)
+                        <?php $__currentLoopData = $events->take(6); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $event): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <div class="flex-shrink-0 w-72 sm:w-80 snap-start group">
                                 <div class="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
                                     <div class="relative h-52 overflow-hidden">
-                                        @if($event->image_url)
-                                            <img src="{{ $event->image_url }}" alt="{{ $event->title }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                                        @else
+                                        <?php if($event->image_url): ?>
+                                            <img src="<?php echo e($event->image_url); ?>" alt="<?php echo e($event->title); ?>" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                        <?php else: ?>
                                             <div class="w-full h-full bg-gradient-to-br from-red-500 to-pink-500 flex items-center justify-center">
                                                 <i class="fas fa-calendar-alt text-white text-6xl opacity-30"></i>
                                             </div>
-                                        @endif
+                                        <?php endif; ?>
                                         <div class="absolute top-3 right-3">
-                                            @if($event->price > 0)
+                                            <?php if($event->price > 0): ?>
                                                 <span class="bg-white px-3 py-1 rounded-full text-sm font-semibold text-red-600 shadow-md">
-                                                    Rp {{ number_format($event->price) }}
+                                                    Rp <?php echo e(number_format($event->price)); ?>
+
                                                 </span>
-                                            @else
+                                            <?php else: ?>
                                                 <span class="bg-green-500 text-white px-3 py-1 rounded-full text-sm font-semibold shadow-md">
                                                     FREE
                                                 </span>
-                                            @endif
+                                            <?php endif; ?>
                                         </div>
-                                        @if($event->category_name)
+                                        <?php if($event->category_name): ?>
                                         <div class="absolute top-3 left-3">
                                             <span class="bg-red-600 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-md">
-                                                {{ $event->category_name }}
+                                                <?php echo e($event->category_name); ?>
+
                                             </span>
                                         </div>
-                                        @endif
+                                        <?php endif; ?>
                                     </div>
                                     <div class="p-5">
                                         <div class="flex items-start justify-between mb-3">
                                             <h3 class="font-bold text-lg text-gray-900 flex-1 line-clamp-2 group-hover:text-red-600 transition-colors">
-                                                <a href="{{ route('events.show', $event->id) }}">
-                                                    {{ $event->title }}
+                                                <a href="<?php echo e(route('events.show', $event->id)); ?>">
+                                                    <?php echo e($event->title); ?>
+
                                                 </a>
                                             </h3>
-                                            @if(session('user'))
-                                            <button onclick="handleBookmarkClick({{ $event->id }}, this, event)" class="ml-2 p-2 rounded-full hover:bg-gray-100 transition-colors bookmark-btn relative z-10" data-event-id="{{ $event->id }}" style="pointer-events: auto;">
+                                            <?php if(session('user')): ?>
+                                            <button onclick="handleBookmarkClick(<?php echo e($event->id); ?>, this, event)" class="ml-2 p-2 rounded-full hover:bg-gray-100 transition-colors bookmark-btn relative z-10" data-event-id="<?php echo e($event->id); ?>" style="pointer-events: auto;">
                                                 <i class="far fa-bookmark text-gray-400"></i>
                                             </button>
-                                            @endif
+                                            <?php endif; ?>
                                         </div>
                                         <div class="space-y-2 text-sm text-gray-600">
                                             <div class="flex items-center gap-2">
                                                 <i class="fas fa-calendar text-red-500 w-4"></i>
-                                                <span>{{ $event->start_date->format('d M Y') }}</span>
+                                                <span><?php echo e($event->start_date->format('d M Y')); ?></span>
                                             </div>
                                             <div class="flex items-center gap-2">
                                                 <i class="fas fa-clock text-red-500 w-4"></i>
-                                                <span>{{ $event->start_date->format('H:i') }} WIB</span>
+                                                <span><?php echo e($event->start_date->format('H:i')); ?> WIB</span>
                                             </div>
                                             <div class="flex items-center gap-2">
                                                 <i class="fas fa-map-marker-alt text-red-500 w-4"></i>
-                                                <span class="line-clamp-1">{{ $event->location }}</span>
+                                                <span class="line-clamp-1"><?php echo e($event->location); ?></span>
                                             </div>
-                                            @if(isset($event->participants_count))
+                                            <?php if(isset($event->participants_count)): ?>
                                             <div class="flex items-center gap-2 pt-2 border-t border-gray-100">
                                                 <i class="fas fa-users text-red-500 w-4"></i>
-                                                <span class="font-semibold text-gray-900">{{ $event->participants_count }} participants</span>
+                                                <span class="font-semibold text-gray-900"><?php echo e($event->participants_count); ?> participants</span>
                                             </div>
-                                            @endif
+                                            <?php endif; ?>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        @endforeach
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </div>
                 </div>
                 <button id="scrollLeftBtn" class="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white rounded-full w-12 h-12 flex items-center justify-center shadow-xl hover:bg-red-50 hover:text-red-600 z-30 transition-all border border-gray-200" onclick="scrollRecommendation('left')">
@@ -284,76 +285,79 @@ console.log('✅ Bookmark script loaded!');
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                @foreach($events as $event)
+                <?php $__currentLoopData = $events; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $event): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <div class="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 group">
                         <div class="relative h-52 overflow-hidden">
-                            @if($event->image_url)
-                                <img src="{{ $event->image_url }}" alt="{{ $event->title }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                            @else
+                            <?php if($event->image_url): ?>
+                                <img src="<?php echo e($event->image_url); ?>" alt="<?php echo e($event->title); ?>" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            <?php else: ?>
                                 <div class="w-full h-full bg-gradient-to-br from-red-500 to-pink-500 flex items-center justify-center">
                                     <i class="fas fa-calendar-alt text-white text-6xl opacity-30"></i>
                                 </div>
-                            @endif
+                            <?php endif; ?>
                             <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-black/0 group-hover:from-black/70 transition-all"></div>
                             <div class="absolute bottom-3 left-3 right-3">
-                                @if($event->category_name)
+                                <?php if($event->category_name): ?>
                                 <span class="inline-block bg-red-600 text-white px-3 py-1 rounded-full text-xs font-semibold mb-2">
-                                    {{ $event->category_name }}
+                                    <?php echo e($event->category_name); ?>
+
                                 </span>
-                                @endif
+                                <?php endif; ?>
                             </div>
                             <div class="absolute top-3 right-3">
-                                @if($event->price > 0)
+                                <?php if($event->price > 0): ?>
                                     <span class="bg-white px-3 py-1 rounded-full text-sm font-semibold text-red-600 shadow-md">
-                                        Rp {{ number_format($event->price) }}
+                                        Rp <?php echo e(number_format($event->price)); ?>
+
                                     </span>
-                                @else
+                                <?php else: ?>
                                     <span class="bg-green-500 text-white px-3 py-1 rounded-full text-sm font-semibold shadow-md">
                                         FREE
                                     </span>
-                                @endif
+                                <?php endif; ?>
                             </div>
                         </div>
                         <div class="p-5">
                             <div class="flex items-start justify-between mb-3">
                                 <h3 class="font-bold text-lg text-gray-900 flex-1 line-clamp-2 group-hover:text-red-600 transition-colors">
-                                    <a href="{{ route('events.show', $event->id) }}">
-                                        {{ $event->title }}
+                                    <a href="<?php echo e(route('events.show', $event->id)); ?>">
+                                        <?php echo e($event->title); ?>
+
                                     </a>
                                 </h3>
-                                @if(session('user'))
-                                <button onclick="handleBookmarkClick({{ $event->id }}, this, event)" class="ml-2 p-2 rounded-full hover:bg-gray-100 transition-colors bookmark-btn relative z-10" data-event-id="{{ $event->id }}" style="pointer-events: auto;">
+                                <?php if(session('user')): ?>
+                                <button onclick="handleBookmarkClick(<?php echo e($event->id); ?>, this, event)" class="ml-2 p-2 rounded-full hover:bg-gray-100 transition-colors bookmark-btn relative z-10" data-event-id="<?php echo e($event->id); ?>" style="pointer-events: auto;">
                                     <i class="far fa-bookmark text-gray-400"></i>
                                 </button>
-                                @endif
+                                <?php endif; ?>
                             </div>
                             <div class="space-y-2 text-sm text-gray-600">
                                 <div class="flex items-center gap-2">
                                     <i class="fas fa-calendar text-red-500 w-4"></i>
-                                    <span>{{ $event->start_date->format('d M Y') }}</span>
+                                    <span><?php echo e($event->start_date->format('d M Y')); ?></span>
                                 </div>
                                 <div class="flex items-center gap-2">
                                     <i class="fas fa-clock text-red-500 w-4"></i>
-                                    <span>{{ $event->start_date->format('H:i') }} WIB</span>
+                                    <span><?php echo e($event->start_date->format('H:i')); ?> WIB</span>
                                 </div>
                                 <div class="flex items-center gap-2">
                                     <i class="fas fa-map-marker-alt text-red-500 w-4"></i>
-                                    <span class="line-clamp-1">{{ $event->location }}</span>
+                                    <span class="line-clamp-1"><?php echo e($event->location); ?></span>
                                 </div>
-                                @if(isset($event->participants_count))
+                                <?php if(isset($event->participants_count)): ?>
                                 <div class="flex items-center gap-2 pt-2 border-t border-gray-100">
                                     <i class="fas fa-users text-red-500 w-4"></i>
-                                    <span class="font-semibold text-gray-900">{{ $event->participants_count }} participants</span>
+                                    <span class="font-semibold text-gray-900"><?php echo e($event->participants_count); ?> participants</span>
                                 </div>
-                                @endif
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
-                @endforeach
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </div>
         </div>
         
-        @else
+        <?php else: ?>
         
         <!-- Empty State -->
         <div class="text-center py-20">
@@ -388,24 +392,24 @@ console.log('✅ Bookmark script loaded!');
                 </div>
 
                 <div class="flex flex-col sm:flex-row gap-3 justify-center">
-                    @if(session('user') && (session('user')['role'] === 'admin' || session('user')['role'] === 'organizer'))
-                        <a href="{{ route('admin.events') }}" class="inline-flex items-center justify-center bg-red-600 text-white px-8 py-3 rounded-full hover:bg-red-700 transition-all shadow-lg hover:shadow-xl font-semibold">
+                    <?php if(session('user') && (session('user')['role'] === 'admin' || session('user')['role'] === 'organizer')): ?>
+                        <a href="<?php echo e(route('admin.events')); ?>" class="inline-flex items-center justify-center bg-red-600 text-white px-8 py-3 rounded-full hover:bg-red-700 transition-all shadow-lg hover:shadow-xl font-semibold">
                             <i class="fas fa-plus-circle mr-2"></i>Create Event
                         </a>
-                    @endif
-                    <a href="{{ route('events.index') }}" class="inline-flex items-center justify-center border-2 border-red-600 text-red-600 px-8 py-3 rounded-full hover:bg-red-50 transition-all font-semibold">
+                    <?php endif; ?>
+                    <a href="<?php echo e(route('events.index')); ?>" class="inline-flex items-center justify-center border-2 border-red-600 text-red-600 px-8 py-3 rounded-full hover:bg-red-50 transition-all font-semibold">
                         <i class="fas fa-search mr-2"></i>Browse All Events
                     </a>
                 </div>
             </div>
         </div>
         
-        @endif
+        <?php endif; ?>
     </div>
 </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@section('scripts')
+<?php $__env->startSection('scripts'); ?>
 <style>
     .scrollbar-hide::-webkit-scrollbar { display: none; }
     .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
@@ -480,4 +484,5 @@ function initializeBookmarks() {
 }
 
 </script>
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('participant.layout', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Study\Kuliah\Semester-7\CP\event-connect\resources\views/participant/events/home.blade.php ENDPATH**/ ?>
